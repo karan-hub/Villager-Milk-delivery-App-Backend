@@ -1,8 +1,8 @@
 package com.karan.village_milk_app.Controller;
 
 
-import Request.LoginRequest;
-import Request.SignupRequest;
+import com.karan.village_milk_app.Request.LoginRequest;
+import com.karan.village_milk_app.Request.SignupRequest;
 import com.karan.village_milk_app.Repositories.OtpCodeRepository;
 import com.karan.village_milk_app.Repositories.RefreshTokenRepository;
 import com.karan.village_milk_app.Config.JwtProvider;

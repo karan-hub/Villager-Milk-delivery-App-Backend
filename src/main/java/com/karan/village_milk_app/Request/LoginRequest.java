@@ -1,4 +1,4 @@
-package Request;
+package com.karan.village_milk_app.Request;
 
 import lombok.Builder;
 import lombok.Data;
