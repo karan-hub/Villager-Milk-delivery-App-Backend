@@ -20,23 +20,23 @@ public class SubscriptionEvents {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id", nullable = false)
+    @Column(name = "event_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_id")
     private Subscriptions subscription;
-
 
     private LocalDate deliveryDate;
 
     @Enumerated(EnumType.STRING)
     private DeliverySlot deliverySlot;
 
+    private Integer deliveredQuantity;
+
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
     @CreatedDate
-    @Column(updatable = false)
     private LocalDateTime createdAt;
 }

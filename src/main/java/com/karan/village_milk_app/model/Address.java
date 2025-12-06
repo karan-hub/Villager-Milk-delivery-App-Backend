@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 @Entity
 @Getter
 @Setter
@@ -21,12 +20,10 @@ public class Address {
     @Column(name = "address_id")
     private Long id;
 
-    // ------------ Address Details ------------
-
     private String flatNumber;
     private String buildingName;
     private String area;
-    private String landmark;           // Near what?
+    private String landmark;
     private String city;
     private String state;
     private String pincode;
@@ -35,10 +32,11 @@ public class Address {
     private Double latitude;
     private Double longitude;
 
-    // ------------ Relationship ------------
+    private boolean isDefault = true;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 }
+

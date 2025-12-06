@@ -19,13 +19,13 @@ public class RefreshToken {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String token;          // UUID string
+    private String token;
+
+    private boolean revoked = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
     private LocalDateTime expiryDate;
-
     private LocalDateTime createdAt;
 }

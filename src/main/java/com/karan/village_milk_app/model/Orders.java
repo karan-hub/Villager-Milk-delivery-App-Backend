@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,33 +22,34 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Orders {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false , name = "order_id")
+    @Column(name = "order_id")
     private Long id;
 
-// Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Products product;
-
-    private  Long quantity;
-    private LocalDateTime delverDate;
-
-    @Enumerated(EnumType.STRING)
-    private DeliverySlot deliverySlot ;
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private BigDecimal totalAmount;
 
+    private LocalDateTime deliveryDate;
+
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private DeliverySlot deliverySlot;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.PENDING;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
 }
+

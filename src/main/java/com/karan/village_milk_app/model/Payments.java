@@ -18,31 +18,32 @@ public class Payments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_id", nullable = false)
+    @Column(name = "payment_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_id")
-    private Subscriptions subscription;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
     private Orders order;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Subscriptions subscription;
+
     private BigDecimal amount;
+
+    private String paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    private String razorpayPaymentId;
-
-    private String razorpayOrderId;
+    @Column(name = "razorpay_payment_id")
+    private String  PaymentId;
+    @Column(name = "razorpay_order_id")
+    private String  payOrderId;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 }
+
