@@ -4,6 +4,7 @@ package com.karan.village_milk_app.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +23,7 @@ public class OtpCode {
     @Column(nullable = false)
     private String code;
 
-    private LocalDateTime expiresAt;
+    private Instant expiresAt;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

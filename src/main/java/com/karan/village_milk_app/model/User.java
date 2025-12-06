@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,12 +32,16 @@ public class User {
 
     private String pincode;
 
+
+
+
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt =Instant.now();
+    private Instant updatedAt = Instant.now();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Address address;

@@ -4,6 +4,7 @@ package com.karan.village_milk_app.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +27,6 @@ public class RefreshToken {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private LocalDateTime expiryDate;
-    private LocalDateTime createdAt;
+    private Instant expiryDate;
+    private Instant createdAt;
 }

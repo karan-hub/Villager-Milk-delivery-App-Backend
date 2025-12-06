@@ -1,0 +1,57 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/VilgoMilks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    hikari:
+      pool-name: HikariPool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      leak-detection-threshold: 2000
+
+  jpa:
+    hibernate:
+      ddl-auto: update    # Development (NOT for production)
+    show-sql: true        # Optional - for debugging SQL
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG          # Show executed SQL
+    org.hibernate.type.descriptor.sql: TRACE  # Show SQL parameter values
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:karan-strong-secret-key}
+    issuer: ${JWT_ISSUER:api.villagemilk.com}
+    access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:3600}     # 1 hour
+    refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:2592000} # 30 days
+    refresh-token-cookie-name: ${JWT_REFRESH_COOKIE_NAME:refreshToken}
+
+    cookie-secure: ${JWT_COOKIE_SECURE:false}  # true in production (HTTPS)
+    cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    cookie-domain: ${JWT_COOKIE_DOMAIN:localhost}
+
+app:
+  auth:
+    frontend:
+      success-redirect: http://localhost:8082/auth/success
+      failure-redirect: http://localhost:8082/auth/failure
