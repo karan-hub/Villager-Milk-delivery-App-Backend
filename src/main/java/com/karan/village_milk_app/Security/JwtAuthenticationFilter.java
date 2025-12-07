@@ -60,7 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                                 if ( SecurityContextHolder.getContext().getAuthentication()==null)
                                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
                             }
                         });
 
@@ -71,6 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 request.setAttribute("error","Invalid Token");
             }
         }
+        filterChain.doFilter(request,response);
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
