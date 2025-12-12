@@ -162,6 +162,9 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 
 ## Database Schema
 
+### ERD Diagram
+![Entity Relationship Diagram](Vilgo%20ERD.png)
+
 ### Main Tables
 - **users**: User accounts and profiles
 - **products**: Milk products catalog
