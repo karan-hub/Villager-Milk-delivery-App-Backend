@@ -12,22 +12,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id")
+    @Column(name = "user_id" , columnDefinition = "BINARY(16)")
     private UUID id;
 
     private String name;
@@ -36,7 +34,6 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String phone;
 
-    private String pincode;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
@@ -53,15 +50,15 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Orders> orders;
+    private List<Orders> orders=new ArrayList<>();;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Subscriptions> subscriptions;
+    private List<Subscriptions> subscriptions =new ArrayList<>(); ;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Payments> payments;
+    private List<Payments> payments =new ArrayList<>();
 
 
     @PrePersist
@@ -79,7 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(role.getLabel()));
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

@@ -4,11 +4,12 @@ package com.karan.village_milk_app.Dto;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class AddressDTO {
 
-    private Long id;
-
+    private UUID id;
     private String flatNumber;
     private String buildingName;
     private String area;

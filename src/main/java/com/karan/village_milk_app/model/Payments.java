@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -18,17 +19,20 @@ import java.time.LocalDateTime;
 public class Payments {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "payment_id",columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", columnDefinition = "BINARY(16)")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", columnDefinition = "BINARY(16)")
     private Orders order;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_id", columnDefinition = "BINARY(16)")
     private Subscriptions subscription;
 
     private BigDecimal amount;

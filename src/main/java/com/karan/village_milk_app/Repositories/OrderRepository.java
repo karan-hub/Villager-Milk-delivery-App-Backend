@@ -4,5 +4,7 @@ import com.karan.village_milk_app.model.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.Repository;
 
-public interface OrderRepository extends JpaRepository<Orders, Long> {
+import java.util.UUID;
+
+public interface OrderRepository extends JpaRepository<Orders, UUID> {
 }

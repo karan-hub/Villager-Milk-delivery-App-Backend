@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.UUID;
+
 
 @Entity
 @Getter
@@ -17,9 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class Address    {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "address_id" ,columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String flatNumber;
     private String buildingName;
@@ -36,7 +38,7 @@ public class Address    {
     private boolean isDefault = true;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id" ,columnDefinition = "BINARY(16)")
     @JsonIgnore
     private User user;
 }

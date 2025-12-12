@@ -5,6 +5,8 @@ import com.karan.village_milk_app.model.User;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+
+@Getter
+@Setter
 @Service
 public class JwtService {
     private  final SecretKey key;
@@ -30,6 +35,8 @@ public class JwtService {
 
         if (secret ==null || secret.length() <64 || secret.trim().isEmpty())
             throw  new IllegalArgumentException("Invalid  Secrete");
+        System.out.println("JWT SECRET = " + secret+"\n\n\n\n\n\n\n\n\n\n\n\n");
+
 
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         AccessTtlSeconds = accessTtlSeconds;
@@ -39,7 +46,7 @@ public class JwtService {
 
     public  String generateAccessToken(User user){
         Instant instant = Instant.now();
-        String role = user.getRole()==null ? "User": user.getName();
+        String role = user.getRole()==null ? "ROLE_USER": user.getRole().name();
 
         return  Jwts.builder()
                 .id(UUID.randomUUID().toString())
@@ -64,7 +71,7 @@ public class JwtService {
                 .subject(user.getId().toString())
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusSeconds(AccessTtlSeconds)))
+                .expiration(Date.from(now.plusSeconds(RefreshTtlSeconds)))
                 .claim("typ" , "refresh")
                 .signWith(key , SignatureAlgorithm.HS512)
                 .compact();

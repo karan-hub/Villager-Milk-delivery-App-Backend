@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 public class SubscriptionPlan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String planKey; // weekly, monthly, fortnight
     private String title;
@@ -20,6 +22,7 @@ public class SubscriptionPlan {
     private String offer;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", columnDefinition = "BINARY(16)")
     @JsonIgnore
     private Product product;
 }

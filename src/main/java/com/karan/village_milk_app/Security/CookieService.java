@@ -6,9 +6,11 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
+@Service
 public class CookieService{
 
     private  final String  refreshTokenCookieName;
@@ -54,7 +56,7 @@ public class CookieService{
                 .path("/")
                 .sameSite(cookieSameSite);
 
-        if (cookieDomain != null || !cookieDomain.isBlank())
+        if (cookieDomain != null && !cookieDomain.isBlank())
             responseCookieBuilder.domain(cookieDomain);
 
         ResponseCookie  responseCookie = responseCookieBuilder.build();

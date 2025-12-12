@@ -39,7 +39,7 @@ logging:
 
 security:
   jwt:
-    secret: ${JWT_SECRET:karan-strong-secret-key}
+    secret: ${JWT_SECRET:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCD1234}
     issuer: ${JWT_ISSUER:api.villagemilk.com}
     access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:3600}     # 1 hour
     refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:2592000} # 30 days

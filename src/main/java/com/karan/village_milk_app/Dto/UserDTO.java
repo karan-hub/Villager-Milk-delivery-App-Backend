@@ -1,17 +1,26 @@
 package com.karan.village_milk_app.Dto;
 
 
-import lombok.Data;
+import com.karan.village_milk_app.model.Type.Role;
+import lombok.*;
 
-@Data
-public class UserDTO {
+import java.time.Instant;
+import java.util.UUID;
 
-    private Long id;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserDTO{
+    private UUID id;
     private String name;
     private String phone;
-
-    private String role;
-
+    private String password;
+    private Role role;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private boolean enable;
     private AddressDTO address;
 }

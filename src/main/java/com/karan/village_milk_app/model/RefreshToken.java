@@ -6,27 +6,40 @@ import lombok.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Getter @Setter
+@Table(name = "refresh_token", indexes = {
+        @Index(name = "token_index"  ,columnList = "jti" , unique = true),
+        @Index(name = "user_index" , columnList = "user_id")
+})
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RefreshToken {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "refresh_token_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false , columnDefinition = "BINARY(16)")
+    private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @Column(name = "jti" , nullable = false , updatable = false , unique = true)
+    private  String jti ;
 
-    private boolean revoked = false;
+    @ManyToOne(optional = false , fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id" , nullable = false , updatable = false ,columnDefinition = "BINARY(16)")
+    private User user ;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Column(updatable = false , nullable = false)
+    private Instant createdAt ;
+    @Column(updatable = false, nullable = false)
+    private Instant expiresAt ;
 
-    private Instant expiryDate;
-    private Instant createdAt;
+    @Column(name = "replaced_by_token")
+    private  boolean revoked;
+
+    @Column(name = "revoked")
+    private  String  replacedByToken;
+
 }
