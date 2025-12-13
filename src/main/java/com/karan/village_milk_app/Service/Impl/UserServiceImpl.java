@@ -99,4 +99,28 @@ public class UserServiceImpl implements UserService {
                 })
                 .toList();
     }
+
+    @Override
+    public UserDTO createUserViaOtp(String phone) {
+
+        if (phone == null || phone.isBlank()) {
+            throw new IllegalArgumentException("Phone is required");
+        }
+
+        if (userRepository.existsByPhone(phone)) {
+            throw new IllegalArgumentException("User already exists");
+        }
+
+        User user = new User();
+        user.setPhone(phone);
+        user.setName("New User");
+        user.setRole(Role.ROLE_USER);
+        user.setEnable(true);
+        user.setPassword(null); // OTP-only user
+        user.setCreatedAt(Instant.now());
+        user.setUpdatedAt(Instant.now());
+
+        return modelMapper.map(userRepository.save(user), UserDTO.class);
+    }
+
 }

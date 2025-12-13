@@ -35,7 +35,6 @@ public class JwtService {
 
         if (secret ==null || secret.length() <64 || secret.trim().isEmpty())
             throw  new IllegalArgumentException("Invalid  Secrete");
-        System.out.println("JWT SECRET = " + secret+"\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

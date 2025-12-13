@@ -39,7 +39,7 @@ public class GlobalExceptionHandler extends RuntimeException {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse>  handleResourceNotFoundException(IllegalArgumentException  exception){
+    public ResponseEntity<ErrorResponse>  handleIllegalArgumentException(IllegalArgumentException  exception){
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
         return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }

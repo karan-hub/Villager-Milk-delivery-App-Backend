@@ -1,4 +1,4 @@
-# Village Milk App
+# Vilgo Milk App
 
 A comprehensive milk delivery application backend built with Spring Boot, providing subscription-based milk delivery services for villagers and urban customers.
 
@@ -207,15 +207,5 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contact
-
-For questions or support, please contact the development team.
-
----
-
-**Note**: This backend is designed to work with a React Native mobile app and a web-based admin panel. The mobile app and admin panel are separate components not included in this repository.</content>
-<filePath="d:\village-milk-app\README.md
+ 
+ 

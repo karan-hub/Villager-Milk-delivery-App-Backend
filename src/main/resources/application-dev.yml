@@ -55,3 +55,9 @@ app:
     frontend:
       success-redirect: http://localhost:8082/auth/success
       failure-redirect: http://localhost:8082/auth/failure
+
+otp:
+  expiry-minutes: 5
+  max-attempts: 3
+
+

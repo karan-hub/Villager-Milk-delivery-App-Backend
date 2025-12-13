@@ -1,0 +1,237 @@
+﻿Software Requirements Specification (SRS)
+Milk Delivery Application (React Native + Spring Boot)
+Version: 1.0
+Date: 18 Nov 2025
+Prepared for: Client / Freelance Project
+Prepared by: karan , prerana 
+________________
+
+
+1. Introduction
+1.1 Purpose
+The purpose of this SRS document is to describe the complete functional and non-functional requirements for the Milk Delivery Application. The system includes:
+* A User Mobile App (React Native)
+* A Backend API Server (Spring Boot)
+* A Web-Based Admin Panel
+The application will allow users to authenticate via phone number & OTP manage their profile, purchase milk via subscription, and make online payments. The admin panel will allow a single admin to manage products, users, subscriptions, and daily deliveries.
+________________
+
+
+1.2 Scope
+User Features
+* Phone number + OTP-based authentication
+* Profile management
+* View milk products (Cow & Buffalo)
+* Purchase subscription plans
+* Configure delivery days and time slot
+* one-time order
+* Online payment
+* Order & subscription view
+
+Admin Features
+   * Single admin login (username + password)
+   * View all users
+   * View and manage subscriptions
+   * Update milk prices
+   * Generate daily delivery schedules
+   * Mark deliveries as delivered
+   * View payments and order history
+
+________________
+
+
+1.3 Definitions
+Term
+	Description
+	OTP
+	One-Time Password sent to user’s phone for login
+	Plan
+	Subscription duration (1 Week, 15 Days, 1 Month)
+	Slot
+	Delivery time (Morning or Evening)
+	Subscription Event
+	A scheduled delivery based on user's selected days
+	________________
+
+
+2. Overall Description
+2.1 Product Perspective
+This application is a standalone system with three components:
+      1. Mobile App (React Native) – User side
+      2. Backend (Spring Boot) – API + Database
+      3. Admin Panel (Web) – Admin dashboard
+The system communicates through secure REST APIs. Payments will be integrated through Razorpay.
+________________
+
+
+2.2 User Classes
+a) End User (Customer)
+      * Uses mobile app
+      * Subscribes to milk delivery
+      * Pays online
+      * Manages profile
+b) Admin
+      * Only one admin
+      * Manages inventory, users, orders, and subscriptions
+
+________________
+
+
+2.3 Assumptions
+         * Users have a valid phone number to receive OTP.
+         * Admin credentials are shared with all required team members.
+         * Payments are processed through Razorpay.
+         * No notifications or reminders will be implemented in this version or letter on Sysytems.
+
+________________
+
+
+3. System Features
+3.1 User Authentication
+Description
+User logs in using phone number and OTP.
+Functional Requirements
+            * FR-1: System shall allow user to enter a phone number.
+            * FR-2: System shall send OTP to user.
+            * FR-3: System shall verify OTP.
+            * FR-4: System shall log user in and generate JWT token.
+
+
+
+________________
+
+
+3.2 User Profile
+Functional Requirements
+               * FR-5: User can view profile (name, phone, address).
+               * FR-6: User can update profile details.
+
+________________
+
+
+3.3 Product Listing
+Functional Requirements
+                  * FR-7: System shall show two milk types: Cow Milk and Buffalo Milk.
+                  * FR-8: Each product shall display price per liter and image.
+
+________________
+
+
+3.4 Subscription Management
+Functional Requirements
+                     * FR-9: User can select subscription duration (1 week, 15 days, 1 month).
+                     * FR-10: User can select delivery slot (Morning/Evening).
+                     * FR-11: User can choose delivery days (Mon–Sun).
+                     * FR-12: User can choose quantity.
+                     * FR-13: System shall calculate total payable amount.
+                     * FR-14: User can skip a delivery at least one day before.
+                     * FR-15: User can edit subscription days, qty, or slot.
+                     * FR-16: User can cancel subscription.
+
+
+
+
+
+
+
+
+
+
+
+
+
+________________
+
+
+3.5 Payment
+Functional Requirements
+                        * FR-17: System shall create a Razorpay order.
+                        * FR-18: User shall complete payment through Razorpay interface.
+                        * FR-19: On successful payment, subscription/order becomes active.
+                        * FR-20: Webhook shall update payment status.
+
+________________
+
+
+3.6 Orders  
+Functional Requirements
+                           * FR-21: User can place a one-time order.
+                           * FR-22: User can choose quantity, product, and slot.
+                           * FR-23: User can view order history.
+
+________________
+
+
+3.7 Admin Panel
+Admin Authentication
+                              * FR-24: Single admin login using username and password.
+Admin Features
+                              * FR-25: Admin can view user list.
+                              * FR-26: Admin can view all subscriptions.
+                              * FR-27: Admin can view and manage daily deliveries.
+                              * FR-28: Admin can mark deliveries as delivered.
+                              * FR-29: Admin can update milk prices.
+                              * FR-30: Admin can view order history and payment details.
+
+
+
+
+
+
+
+________________
+
+
+4. Non-Functional Requirements
+4.1 Performance
+                                 * System should handle up to 5,000 daily active users. ONLY
+4.2 Security
+                                 * JWT-based authentication.
+                                 * Admin password must be hashed using BCrypt.
+                                 * Payment processed through PCI-DSS compliant Razorpay.
+4.3 Usability
+                                 * Clean and minimal mobile UI.
+                                 * Simple admin panel for non-technical staff.
+4.4 Reliability
+                                 * System uptime target: 99%.
+                                 * Payment failures must not activate subscriptions.
+________________
+
+
+5. Database Requirements
+Tables required:
+                                 * Users
+                                 * Admin
+                                 * Products
+                                 * Subscriptions
+                                 * Subscription Events
+                                 * Orders
+                                 * Payments
+                                 * Addresses
+
+________________
+
+
+6. External Interface Requirements
+Mobile Interface
+                                    * React Native app for Android/iOS
+Admin Interface
+                                    * Web browser interface
+API Interface
+                                    * REST APIs (JSON format)
+Payment Interface
+                                    * Razorpay Checkout
+                                    * Razorpay Webhooks
+
+
+________________
+
+
+7. Future Enhancements  
+                                       * Push notifications
+                                       * Delivery boy app
+                                       * Auto-renew subscriptions
+                                       * GPS tracking
+                                       * Multi-admin role system
+
+________________
