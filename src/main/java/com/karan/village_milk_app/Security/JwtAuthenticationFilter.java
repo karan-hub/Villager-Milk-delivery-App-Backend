@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,7 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                  GrantedAuthority authorities =
                                          user.getRole() == null ?
                                                  new SimpleGrantedAuthority("")
-                                                 : new SimpleGrantedAuthority(user.getRole().getLabel());
+                                                 : new SimpleGrantedAuthority(user.getRole().name());
+
+//                                GrantedAuthority authorities = new SimpleGrantedAuthority(user.getRole().name());
 
                                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                         user.getPhone(),
@@ -70,6 +73,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 request.setAttribute("error","Invalid Token");
             }
         }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null) {
+            System.out.println("AUTH PRINCIPAL = " + auth.getName());
+            System.out.println("AUTH AUTHORITIES = " + auth.getAuthorities());
+        } else {
+            System.out.println("NO AUTH IN CONTEXT");
+        }
+
+
         filterChain.doFilter(request,response);
     }
     @Override

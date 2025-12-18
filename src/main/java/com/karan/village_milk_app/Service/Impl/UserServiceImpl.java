@@ -10,6 +10,9 @@ import com.karan.village_milk_app.model.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -89,15 +92,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Iterable<UserDTO> getAllUsers() {
+    public Page<UserDTO> getAllUsers(int page , int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return userRepository
-                .findAll()
-                .stream()
+                .findAll(pageable)
                 .map((user) -> {
                     user.setPassword(null);
                     return modelMapper.map(user, UserDTO.class);
-                })
-                .toList();
+                });
     }
 
     @Override

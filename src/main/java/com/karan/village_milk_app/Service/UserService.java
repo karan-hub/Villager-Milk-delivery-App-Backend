@@ -9,5 +9,5 @@ public interface UserService {
     void deleteUser(String userId);
     UserDTO  getUserById(String userId);
     public UserDTO createUserViaOtp(String phone);
-    Iterable<UserDTO> getAllUsers();
+    Iterable<UserDTO> getAllUsers(int page , int size);
 }
