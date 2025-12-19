@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private UUID id;
 
     private String name;
+    @JsonIgnore
     private String password;
 
     @Column(unique = true, nullable = false)

@@ -1,8 +1,10 @@
 package com.karan.village_milk_app.Service;
 
+import com.karan.village_milk_app.Request.SignupRequest;
 import com.karan.village_milk_app.Dto.UserDTO;
 
 public interface UserService {
+    UserDTO createUser(SignupRequest  signupRequest);
     UserDTO createUser(UserDTO  userDto);
     UserDTO getUserByPhone(String  phone);
     UserDTO updateUser(UserDTO  userDto , String  userId);

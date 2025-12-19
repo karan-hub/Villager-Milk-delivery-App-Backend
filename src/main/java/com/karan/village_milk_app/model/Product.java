@@ -1,10 +1,8 @@
 package com.karan.village_milk_app.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,6 +14,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -23,16 +22,22 @@ public class Product {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    private String name; // Cow Milk, Desi Cow Ghee
-    private String type; // cow, buffalo, ghee
+    @Column(nullable = false)
+    private String name;
 
-    private String unit;  // "500ml", "1L", "500g", "1kg"
+    @Column(nullable = false)
+    private String type;
+
+    @Column(nullable = false)
+    private String unit;
+
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    private Boolean inStock = true;
+    @Column(nullable = false)
+    private Boolean inStock;
 
-    private String imageUrl; // store single URL
-
+    private String imageUrl;
 
 
     @ElementCollection

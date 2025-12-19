@@ -12,7 +12,9 @@ public class SecurityEndpoints {
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
             "/api/v1/auth/logout",
-            "/api/v1/auth/otp/**"
+            "/api/v1/auth/otp/**",
+            "/error",
+            "/error/**"
     );
 
     // Admin-only endpoints

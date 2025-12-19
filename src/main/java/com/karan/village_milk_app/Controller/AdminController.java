@@ -6,13 +6,12 @@ import com.karan.village_milk_app.Service.UserService;
 import com.karan.village_milk_app.model.Type.Role;
 import com.karan.village_milk_app.model.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,22 +23,23 @@ public class AdminController {
     private final UserService userService;
 
 
-    @PutMapping("/admin/users/{id}/make-admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void makeAdmin(@PathVariable UUID id) {
+    @PutMapping("/users/{id}/make-admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<HttpStatus> makeAdmin(@PathVariable UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow();
         user.setRole(Role.ROLE_ADMIN);
         userRepository.save(user);
-        List<User> all = userRepository.findAll();
-        System.out.println(all);
+        return  ResponseEntity.ok(HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(HttpStatus.OK);
+
     }
 
     @GetMapping
@@ -49,14 +49,14 @@ public class AdminController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO created = userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/phone/{phone}")
-    @PreAuthorize(" hasRole('ADMIN')")
+    @PreAuthorize(" hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> getUserByPhone(@PathVariable String phone) {
         return ResponseEntity.ok(userService.getUserByPhone(phone));
     }

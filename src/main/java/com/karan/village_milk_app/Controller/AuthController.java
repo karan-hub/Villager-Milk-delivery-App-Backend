@@ -18,16 +18,13 @@ import com.karan.village_milk_app.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.module.ResolutionException;
 import java.time.Instant;
 import java.util.*;
 
@@ -199,9 +195,9 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO>  registerUser(@RequestBody UserDTO  userDto ){
+    public ResponseEntity<UserDTO>  registerUser(@RequestBody SignupRequest  signupRequest){
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(userDto));
+        return  ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(signupRequest));
     }
 
 

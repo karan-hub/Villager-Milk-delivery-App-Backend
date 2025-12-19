@@ -1,5 +1,6 @@
 package com.karan.village_milk_app.Service.Impl;
 
+import com.karan.village_milk_app.Request.SignupRequest;
 import com.karan.village_milk_app.Dto.UserDTO;
 import com.karan.village_milk_app.Repositories.UserRepository;
 import com.karan.village_milk_app.Exceptions.ResourceNotFoundException;
@@ -26,9 +27,35 @@ public class UserServiceImpl implements UserService {
     private  final ModelMapper modelMapper;
     private  final PasswordEncoder passwordEncoder;
     @Override
+    public UserDTO createUser(SignupRequest signupRequest) {
+        if(signupRequest.getPhone() == null || signupRequest.getPhone().isBlank() || userRepository.existsByPhone(signupRequest.getPhone())) {
+            throw new IllegalArgumentException("Invalid or duplicate phone");
+        }
+        if(signupRequest.getPassword() == null || signupRequest.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or blank");
+        }
+        String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
+
+        User user = new User();
+        user.setName(signupRequest.getName());
+        user.setPhone(signupRequest.getPhone());
+        user.setPassword(encodedPassword);
+        user.setRole(Role.ROLE_USER);
+        user.setEnable(true);
+        user.setCreatedAt(Instant.now());
+        user.setUpdatedAt(Instant.now());
+
+        User saveUser = userRepository.save(user);
+        return modelMapper.map(saveUser , UserDTO.class);
+    }
+
+    @Override
     public UserDTO createUser(UserDTO dto) {
         if(dto.getPhone() == null || dto.getPhone().isBlank() || userRepository.existsByPhone(dto.getPhone())) {
             throw new IllegalArgumentException("Invalid or duplicate phone");
+        }
+        if(dto.getPassword() == null || dto.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or blank");
         }
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         dto.setRole(Role.ROLE_USER);
@@ -45,7 +72,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserByPhone(String phone) {
         User  user = userRepository.findByPhone(phone).orElseThrow(()->new ResourceNotFoundException("Number IS NOT FOUND"));
-        user.setPassword(null);
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -86,7 +112,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(String userId) {
         UUID uuid = UserHelper.parseUUID(userId);
         User  user = userRepository.findById(uuid).orElseThrow(()-> new ResourceNotFoundException("NO USER FOUND FOR THIS MAIL"));
-        user.setPassword(null);
+
         return  modelMapper.map(user , UserDTO.class);
     }
 
@@ -97,7 +123,6 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findAll(pageable)
                 .map((user) -> {
-                    user.setPassword(null);
                     return modelMapper.map(user, UserDTO.class);
                 });
     }
