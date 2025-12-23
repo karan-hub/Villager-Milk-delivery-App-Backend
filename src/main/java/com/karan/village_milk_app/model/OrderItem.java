@@ -2,6 +2,8 @@ package com.karan.village_milk_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,6 +12,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Setter
+@Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class OrderItem {
@@ -34,5 +38,11 @@ public class OrderItem {
 
     @CreatedDate
     private Instant createdAt;
+
+
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
 }
 

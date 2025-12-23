@@ -54,5 +54,9 @@ public class Orders {
     @CreatedDate
     @Column(updatable = false)
     private Instant createdAt;
+
+    @Column(name = "subscription_event_id", unique = true)
+    private UUID subscriptionEventId;
+
 }
 
