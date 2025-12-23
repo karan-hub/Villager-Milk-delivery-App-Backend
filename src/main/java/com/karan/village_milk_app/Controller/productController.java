@@ -24,7 +24,7 @@ public class productController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.getProductById(String.valueOf(id)));
     }
 
     @PostMapping
@@ -36,13 +36,13 @@ public class productController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
-        return ResponseEntity.ok(productService.updateProduct(id, productDto));
+        return ResponseEntity.ok(productService.updateProduct(String.valueOf(id), productDto));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+        productService.deleteProduct(String.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

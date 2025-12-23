@@ -50,10 +50,11 @@ public class AdminProductController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getProducts(@RequestParam(defaultValue = "0") int page , @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<?> getProducts(
+            @RequestParam(defaultValue = "0") int page ,
+            @RequestParam(defaultValue = "20") int size
+    ) {
         return ResponseEntity.ok(productServiceImpl.getProducts(page, size));
     }
-    
-
 
 }

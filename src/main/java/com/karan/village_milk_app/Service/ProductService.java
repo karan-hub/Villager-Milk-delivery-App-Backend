@@ -7,6 +7,6 @@ public interface ProductService {
     Page<ProductDto> getProducts(int page, int size);
     ProductDto createProduct(ProductDto productDto);
     ProductDto updateProduct(String id, ProductDto productDto);
-    void deleteProduct(String id);
+    void deleteProduct(String  id);
     ProductDto getProductById(String id);
 }
