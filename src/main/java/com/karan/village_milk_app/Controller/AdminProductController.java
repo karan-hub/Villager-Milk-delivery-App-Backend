@@ -5,6 +5,7 @@ import com.karan.village_milk_app.Service.AdminService;
 import com.karan.village_milk_app.Service.Impl.AdminServiceImpl;
 import com.karan.village_milk_app.Service.Impl.ProductServiceImpl;
 
+import com.karan.village_milk_app.Service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,41 +21,35 @@ import java.util.UUID;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminProductController {
 
-    private final AdminServiceImpl adminServiceImpl;
-    private final ProductServiceImpl productServiceImpl;
-
+    private final AdminService adminService;
+    private final ProductService productService;
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(
-            @RequestBody @Valid ProductDto dto
-    ) {
+            @RequestBody @Valid ProductDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(adminServiceImpl.createProduct(dto));
+                .body(adminService.createProduct(dto));
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable UUID productId,
-            @RequestBody ProductDto dto
-    ) {
-        return ResponseEntity.ok(adminServiceImpl.updateProduct(productId, dto));
+            @RequestBody ProductDto dto) {
+        return ResponseEntity.ok(adminService.updateProduct(productId, dto));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(
-            @PathVariable UUID productId
-    ) {
-        adminServiceImpl.deleteProduct(productId);
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
+        adminService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<?> getProducts(
-            @RequestParam(defaultValue = "0") int page ,
-            @RequestParam(defaultValue = "20") int size
-    ) {
-        return ResponseEntity.ok(productServiceImpl.getProducts(page, size));
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(productService.getProducts(page, size));
     }
-
 }
+
