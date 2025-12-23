@@ -20,11 +20,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "subscriptions")
 public class Subscriptions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "subscription_id" ,columnDefinition = "BINARY(16)")
+    @Column(name = "subscription_id", columnDefinition = "BINARY(16)")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,28 +33,20 @@ public class Subscriptions {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", columnDefinition = "BINARY(16)")
-    private Product product;
-
-    private Integer quantity;
-
-    private String planType;
+    @JoinColumn(name = "plan_id", columnDefinition = "BINARY(16)")
+    private SubscriptionPlan plan;
 
     private LocalDate startDate;
     private LocalDate endDate;
-
-    @Enumerated(EnumType.STRING)
-    private DeliverySlot deliverySlot;
-
-    @ElementCollection
-    @CollectionTable(name = "subscription_days", joinColumns = @JoinColumn(name = "subscription_id"))
-    @Enumerated(EnumType.STRING)
-    private List<DayOfWeek> deliveryDays;
 
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
 
     @CreatedDate
     @Column(updatable = false)
-    private Instant updatedAt = Instant.now();
+    private Instant createdAt;
+
+
 }
+
+

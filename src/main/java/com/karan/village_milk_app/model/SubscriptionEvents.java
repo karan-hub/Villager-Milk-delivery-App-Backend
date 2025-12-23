@@ -41,4 +41,6 @@ public class SubscriptionEvents {
 
     @CreatedDate
     private Instant createdAt;
+
+
 }

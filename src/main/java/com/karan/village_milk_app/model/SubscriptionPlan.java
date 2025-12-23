@@ -2,10 +2,14 @@ package com.karan.village_milk_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 public class SubscriptionPlan {
 
@@ -25,4 +29,6 @@ public class SubscriptionPlan {
     @JoinColumn(name = "product_id", columnDefinition = "BINARY(16)")
     @JsonIgnore
     private Product product;
+
+
 }
