@@ -15,12 +15,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
     private final ModelMapper modelMapper;
 
     @Override
@@ -38,12 +40,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(String id, ProductDto productDto) {
+    @Transactional
+    public ProductDto updateProduct(String id, ProductDto dto) {
         UUID productId = UserHelper.parseUUID(id);
-        Product existing = productRepository.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        modelMapper.map(productDto, existing);
-        Product saved = productRepository.save(existing);
+
+        if (dto.getName() != null) product.setName(dto.getName());
+        if (dto.getType() != null) product.setType(dto.getType());
+        if (dto.getUnit() != null) product.setUnit(dto.getUnit());
+        if (dto.getPrice() != null) product.setPrice(dto.getPrice());
+        if (dto.getInStock() != null) product.setInStock(dto.getInStock());
+        if (dto.getImageUrl() != null) product.setImageUrl(dto.getImageUrl());
+        if (dto.getTags() != null) product.setTags(dto.getTags());
+        if (dto.getHighlights() != null) product.setHighlights(dto.getHighlights());
+        if (dto.getBenefits() != null) product.setBenefits(dto.getBenefits());
+        if (dto.getNutrition() != null) product.setNutrition(dto.getNutrition());
+
+        Product saved = productRepository.save(product);
         return modelMapper.map(saved, ProductDto.class);
     }
 
