@@ -69,4 +69,8 @@ public class CookieService{
         response.setHeader("Pragma" , "no-cache");
     }
 
+    public String getRefreshTokenCookieName() {
+        return refreshTokenCookieName;
+    }
+
 }

@@ -12,4 +12,8 @@ import org.springframework.stereotype.Component;
 public class OtpProperties {
     private long expiryMinutes;
     private int maxAttempts;
+
+    public long getExpiryMinutes() {
+        return expiryMinutes;
+    }
 }

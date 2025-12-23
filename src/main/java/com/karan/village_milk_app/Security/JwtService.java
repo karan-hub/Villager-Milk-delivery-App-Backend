@@ -109,5 +109,17 @@ public class JwtService {
         return parse(token).getPayload().getId();
     }
 
+    public long getRefreshTtlSeconds() {
+        return RefreshTtlSeconds;
+    }
+
+    public long getAccessTtlSeconds() {
+        return AccessTtlSeconds;
+    }
+
+    public String getPhone(String token) {
+        Claims c = parse(token).getPayload();
+        return c.get("phone", String.class);
+    }
 
 }

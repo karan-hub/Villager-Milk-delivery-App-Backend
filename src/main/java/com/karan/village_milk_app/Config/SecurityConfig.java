@@ -45,6 +45,9 @@ public class SecurityConfig {
                                 .requestMatchers(securityEndpoints.PUBLIC_ENDPOINTS.toArray(String[]::new)).permitAll()
 //                               Admin URLs
                                 .requestMatchers(securityEndpoints.ADMIN_ENDPOINTS.toArray(String[]::new)).hasRole("ADMIN")
+
+//                                User
+                                .requestMatchers(securityEndpoints.USER_ENDPOINTS.toArray(String[]::new)).hasRole("USER")
                                 // Others
                                 .anyRequest().authenticated()
                 )
@@ -93,7 +96,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*")); // TODO: prod me domain set karna
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://yourdomain.com")); // Configure allowed origins
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         config.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
         config.setAllowCredentials(true);
