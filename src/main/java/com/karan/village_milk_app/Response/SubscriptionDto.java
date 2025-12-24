@@ -22,7 +22,5 @@ public class SubscriptionDto {
     private UUID userId;
     private UUID planId;
 
-
-
 }
 

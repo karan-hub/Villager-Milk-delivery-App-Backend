@@ -23,7 +23,7 @@ public class UserDTO{
     private Role role;
     private Instant createdAt;
     private Instant updatedAt;
-    private boolean enable;
+    private Boolean enabled;
     private AddressDTO address;
 
 
