@@ -42,4 +42,55 @@ public class RefreshToken {
     @Column(name = "revoked")
     private  String  replacedByToken;
 
+    public static RefreshTokenBuilder builder() {
+        return new RefreshTokenBuilder();
+    }
+
+
+    public static class RefreshTokenBuilder {
+        private UUID id;
+        private String jti;
+        private User user;
+        private Instant createdAt;
+        private Instant expiresAt;
+        private boolean revoked;
+        private String replacedByToken;
+
+        public RefreshTokenBuilder jti(String jti) {
+            this.jti = jti;
+            return this;
+        }
+
+        public RefreshTokenBuilder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public RefreshTokenBuilder createdAt(Instant createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public RefreshTokenBuilder expiresAt(Instant expiresAt) {
+            this.expiresAt = expiresAt;
+            return this;
+        }
+
+        public RefreshTokenBuilder revoked(boolean revoked) {
+            this.revoked = revoked;
+            return this;
+        }
+
+        public RefreshToken build() {
+            RefreshToken token = new RefreshToken();
+            token.id = this.id;
+            token.jti = this.jti;
+            token.user = this.user;
+            token.createdAt = this.createdAt;
+            token.expiresAt = this.expiresAt;
+            token.revoked = this.revoked;
+            token.replacedByToken = this.replacedByToken;
+            return token;
+        }
+    }
 }

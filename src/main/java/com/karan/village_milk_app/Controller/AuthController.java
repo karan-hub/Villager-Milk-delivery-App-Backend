@@ -12,8 +12,9 @@ import com.karan.village_milk_app.Repositories.RefreshTokenRepository;
 import com.karan.village_milk_app.Repositories.UserRepository;
 import com.karan.village_milk_app.Security.CookieService;
 import com.karan.village_milk_app.Security.JwtService;
-import com.karan.village_milk_app.Service.AuthService;
+import com.karan.village_milk_app.Service.RefreshTokenService;
 import com.karan.village_milk_app.model.RefreshToken;
+import com.karan.village_milk_app.model.Type.Role;
 import com.karan.village_milk_app.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,9 +50,9 @@ public class AuthController {
      private final RefreshTokenRepository refreshTokenRepository;
      private final OtpCodeRepository otpCodeRepository;
      private final CookieService cookieService;
+     private final RefreshTokenService refreshTokenService;
      private final ModelMapper modelMapper;
      private final AuthenticationManager authenticationManager;
-     private final AuthService authService;
 
 
 
@@ -59,6 +61,7 @@ public class AuthController {
     // -----------------------------------
 
     @PostMapping("/login")
+    @Transactional
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest  request , HttpServletResponse response) {
 
         Authentication authentication = authenticate(request);
@@ -73,7 +76,7 @@ public class AuthController {
                 .revoked(false)
                 .build();
 
-        refreshTokenRepository.save(refreshTokenOb);
+        refreshTokenService.save(refreshTokenOb);
 
         String accessToken =jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user , refreshTokenOb.getJti());
@@ -105,16 +108,13 @@ public class AuthController {
     // -----------------------------------
 
     @PostMapping("/logout")
+    @Transactional
     public ResponseEntity<Void> logout(HttpServletRequest request , HttpServletResponse response) {
         readRefreshTokenFromRequest(null ,request).ifPresent(token->{
             try {
                 if (jwtService.isRefreshToken(token)){
                     String jit = jwtService.getJti(token);
-                    refreshTokenRepository.findByJti(jit)
-                            .ifPresent(refreshToken -> {
-                                refreshToken.setRevoked(true);
-                                refreshTokenRepository.save(refreshToken);
-                            });
+                    refreshTokenService.revoke(jit);
                 }
             } catch (Exception ignored) { }
 
@@ -133,6 +133,7 @@ public class AuthController {
     // -----------------------------------
 
     @PostMapping("/refresh")
+    @Transactional
     public ResponseEntity<TokenResponse> refreshToken(@RequestBody( required = false) RefreshTokenRequest body , HttpServletResponse response , HttpServletRequest request){
 
         String refreshToken = readRefreshTokenFromRequest(body , request)
@@ -144,7 +145,7 @@ public class AuthController {
         String jti = jwtService.getJti(refreshToken);
         UUID userId = jwtService.getUserId(refreshToken);
 
-        RefreshToken storedRefreshToken = refreshTokenRepository.findByJti(jti).orElseThrow(() -> new BadCredentialsException("Invalid Refresh Token"));
+        RefreshToken storedRefreshToken = refreshTokenService.findByJti(jti).orElseThrow(() -> new BadCredentialsException("Invalid Refresh Token"));
 
         if (storedRefreshToken.isRevoked())
             throw  new BadCredentialsException("Refresh Token Expired or  Revoked");
@@ -196,8 +197,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO>  registerUser(@RequestBody SignupRequest  signupRequest){
+        if (userRepository.findByPhone(signupRequest.getPhone()).isPresent()) {
+            throw new ResourceNotFoundException("User already exists with phone: " + signupRequest.getPhone());
+        }
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(signupRequest));
+        User user = new User();
+        user.setName(signupRequest.getName());
+        user.setPhone(signupRequest.getPhone());
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        user.setRole(Role.ROLE_USER);
+
+        userRepository.save(user);
+
+        return  ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(user, UserDTO.class));
     }
 
 

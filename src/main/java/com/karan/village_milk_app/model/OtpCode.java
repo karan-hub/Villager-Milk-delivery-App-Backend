@@ -38,4 +38,6 @@ public class OtpCode {
     @CreatedDate
     @Column(updatable = false)
     private Instant createdAt;
+
+
 }
