@@ -1,11 +1,25 @@
 package com.karan.village_milk_app.Service;
 
 import com.karan.village_milk_app.Dto.ProductDto;
+import com.karan.village_milk_app.Dto.SubscriptionEventDto;
+import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.model.DeliveryDto;
+import com.karan.village_milk_app.model.SubscriptionEvents;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AdminService {
-    ProductDto  createProduct(ProductDto product);
-    ProductDto  updateProduct( UUID  productId,ProductDto product);
+
+
+    ProductDto createProduct(ProductDto product);
+    ProductDto updateProduct(UUID productId, ProductDto product);
     void deleteProduct(UUID productId);
+
+    List<SubscriptionDto> getAllSubscriptions();
+
+    List<SubscriptionEventDto> getTodayDeliveries();
+    void markDelivered(UUID eventId);
+
+    void markMissed(UUID eventId);
 }
