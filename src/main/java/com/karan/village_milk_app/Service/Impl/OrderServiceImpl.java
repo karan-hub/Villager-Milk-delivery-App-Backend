@@ -1,4 +1,112 @@
 package com.karan.village_milk_app.Service.Impl;
 
-public class OrderServiceImpl {
+import com.karan.village_milk_app.Dto.OrderDto;
+import com.karan.village_milk_app.Exceptions.ResourceNotFoundException;
+import com.karan.village_milk_app.Repositories.OrderRepository;
+import com.karan.village_milk_app.Repositories.ProductRepository;
+import com.karan.village_milk_app.Request.CreateOrderItemRequest;
+import com.karan.village_milk_app.Request.CreateOrderRequest;
+import com.karan.village_milk_app.Security.SecurityUtils;
+import com.karan.village_milk_app.Service.OrderService;
+import com.karan.village_milk_app.model.OrderItem;
+import com.karan.village_milk_app.model.Orders;
+import com.karan.village_milk_app.model.Product;
+import com.karan.village_milk_app.model.Type.OrderStatus;
+import com.karan.village_milk_app.model.User;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository ordersRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
+
+    @Override
+    public OrderDto placeOrder(CreateOrderRequest request) {
+
+        // 🔐 User from JWT (BEST PRACTICE)
+        UUID userId = SecurityUtils.getCurrentUserId();
+        User user = new User();
+        user.setId(userId);
+
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Order items are required");
+        }
+
+        Orders order = new Orders();
+        order.setUser(user);
+        order.setDeliverySlot(request.getDeliverySlot());
+        order.setDeliveryDate(request.getDeliveryDate());
+        order.setStatus(OrderStatus.PENDING);
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (CreateOrderItemRequest itemReq : request.getItems()) {
+
+            if (itemReq.getQuantity() == null || itemReq.getQuantity() <= 0) {
+                throw new IllegalArgumentException("Quantity must be positive");
+            }
+
+            Product product = productRepository.findById(itemReq.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(product);
+            item.setQuantity(itemReq.getQuantity());
+            item.setPrice(product.getPrice());
+
+            BigDecimal itemTotal =
+                    product.getPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+
+            item.setTotalPrice(itemTotal);
+
+            order.getOrderItems().add(item);
+            totalAmount = totalAmount.add(itemTotal);
+        }
+
+        order.setTotalAmount(totalAmount);
+
+        Orders saved = ordersRepository.save(order);
+        return modelMapper.map(saved, OrderDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderDto> getMyOrders() {
+
+        UUID userId = SecurityUtils.getCurrentUserId();
+
+        return ordersRepository.findByUserIdWithItemsOrderByCreatedAtDesc(userId)
+                .stream()
+                .map(o -> modelMapper.map(o, OrderDto.class))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDto getOrderById(UUID orderId) {
+
+        UUID userId = SecurityUtils.getCurrentUserId();
+
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if (!order.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Not allowed to view this order");
+        }
+
+        return modelMapper.map(order, OrderDto.class);
+    }
 }
