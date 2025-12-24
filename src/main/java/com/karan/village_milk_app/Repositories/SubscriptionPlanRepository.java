@@ -1,4 +1,13 @@
 package com.karan.village_milk_app.Repositories;
 
-public interface SubscriptionPlanRepository {
+import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.model.SubscriptionPlan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface SubscriptionPlanRepository
+        extends JpaRepository<SubscriptionPlan, UUID> {
 }
