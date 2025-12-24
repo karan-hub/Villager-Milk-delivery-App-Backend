@@ -24,6 +24,7 @@ public class SubscriptionPlan {
     private Integer units;
     private BigDecimal price;
     private String offer;
+    
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", columnDefinition = "BINARY(16)")
