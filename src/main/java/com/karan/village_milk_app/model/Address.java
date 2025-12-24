@@ -41,5 +41,6 @@ public class Address    {
     @JoinColumn(name = "user_id" ,columnDefinition = "BINARY(16)")
     @JsonIgnore
     private User user;
+
 }
 

@@ -12,4 +12,5 @@ public interface UserService {
     UserDTO  getUserById(String userId);
     public UserDTO createUserViaOtp(String phone);
     Iterable<UserDTO> getAllUsers(int page , int size);
+    void makeAdmin(String userId);
 }

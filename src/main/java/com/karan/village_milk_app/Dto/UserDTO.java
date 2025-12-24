@@ -25,4 +25,6 @@ public class UserDTO{
     private Instant updatedAt;
     private boolean enable;
     private AddressDTO address;
+
+
 }

@@ -74,6 +74,12 @@ public class User implements UserDetails {
         this.updatedAt  = Instant.now();
     }
 
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

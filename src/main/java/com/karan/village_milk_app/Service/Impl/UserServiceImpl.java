@@ -150,4 +150,15 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(userRepository.save(user), UserDTO.class);
     }
 
+    @Override
+    public void makeAdmin(String userId) {
+        UUID uuid = UserHelper.parseUUID(userId);
+        User user = userRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getRole() == Role.ROLE_ADMIN) {
+            throw new IllegalArgumentException("User is already an admin");
+        }
+        user.setRole(Role.ROLE_ADMIN);
+        userRepository.save(user);
+    }
+
 }
