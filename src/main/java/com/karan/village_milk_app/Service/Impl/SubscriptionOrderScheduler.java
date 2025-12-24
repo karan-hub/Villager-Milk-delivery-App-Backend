@@ -19,7 +19,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SubscriptionOrderScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriptionOrderScheduler.class);
