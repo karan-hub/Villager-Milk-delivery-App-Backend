@@ -39,6 +39,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     /* ================= CREATE SUBSCRIPTION ================= */
 
     @Override
+    @Transactional
     public SubscriptionDto createSubscription(CreateSubscriptionRequest req) {
 
         UUID userId = SecurityUtils.getCurrentUserId();
@@ -55,12 +56,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setStartDate(req.getStartDate());
         sub.setEndDate(req.getStartDate().plusDays(plan.getDurationDays()));
         sub.setStatus(SubscriptionStatus.ACTIVE);
+        sub.setDeliverySlot(req.getDeliverySlot());
+        sub.setQuantity(req.getQuantity());
+        sub.setPlanType(req.getPlanType());
 
-        subscriptionRepo.save(sub);
+        Subscriptions saved = subscriptionRepo.save(sub);
 
-        generateSubscriptionEvents(sub, req.getDeliverySlot());
+        generateSubscriptionEvents(saved, req.getDeliverySlot());
 
-        return modelMapper.map(sub, SubscriptionDto.class);
+        return modelMapper.map(saved, SubscriptionDto.class);
     }
 
     /* ================= GET MY SUBSCRIPTIONS ================= */

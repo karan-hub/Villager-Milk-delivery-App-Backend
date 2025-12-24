@@ -4,9 +4,7 @@ import com.karan.village_milk_app.Repositories.SubscriptionEventsRepository;
 import com.karan.village_milk_app.Repositories.SubscriptionsRepository;
 import com.karan.village_milk_app.Response.SubscriptionDto;
 import com.karan.village_milk_app.Service.AdminSubscriptionService;
-import com.karan.village_milk_app.model.DeliveryDto;
-import com.karan.village_milk_app.model.SubscriptionEvents;
-import com.karan.village_milk_app.model.Subscriptions;
+import com.karan.village_milk_app.model.*;
 import com.karan.village_milk_app.model.Type.EventStatus;
 import com.karan.village_milk_app.model.Type.SubscriptionStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,16 +73,72 @@ public class AdminSubscriptionServiceImpl
     /* ================= SAFE MAPPERS ================= */
 
     private SubscriptionDto toDto(Subscriptions s) {
-        SubscriptionDto dto = modelMapper.map(s, SubscriptionDto.class);
-        dto.setUserId(s.getUser().getId());
-        dto.setPlanId(s.getPlan().getId());
+
+        SubscriptionDto dto = new SubscriptionDto();
+
+        // Subscription basic info
+        dto.setSubscriptionId(s.getId());
+        dto.setUnits(s.getPlan().getUnits());
+        dto.setStartDate(s.getStartDate());
+        dto.setEndDate(s.getEndDate());
+        dto.setDeliverySlot(dto.getDeliverySlot());
+        dto.setStatus(s.getStatus());
+        dto.setCreatedAt(s.getCreatedAt());
+
+        // User info
+        if (s.getUser() != null) {
+            dto.setUserId(s.getUser().getId());
+        }
+
+        // Plan + Product info
+        if (s.getPlan() != null) {
+            dto.setPlanId(s.getPlan().getId());
+            dto.setPlanTitle(s.getPlan().getTitle());
+
+            if (s.getPlan().getProduct() != null) {
+                dto.setProductName(s.getPlan().getProduct().getName());
+            }
+        }
+
         return dto;
     }
 
+
     private DeliveryDto toDeliveryDto(SubscriptionEvents e) {
-        DeliveryDto dto = modelMapper.map(e, DeliveryDto.class);
-        dto.setSubscriptionId(e.getSubscription().getId());
-        dto.setUserId(e.getSubscription().getUser().getId());
+
+        DeliveryDto dto = new DeliveryDto();
+
+        // Event info
+        dto.setEventId(e.getId());
+        dto.setQuantity(e.getDeliveredQuantity());
+        dto.setDeliverySlot(e.getDeliverySlot());
+        dto.setDeliveryDate(e.getDeliveryDate());
+        dto.setStatus(e.getStatus());
+
+        Subscriptions subscription = e.getSubscription();
+        if (subscription == null) {
+            return dto;
+        }
+
+        dto.setSubscriptionId(subscription.getId());
+
+        // User info
+        User user = subscription.getUser();
+        if (user != null) {
+            dto.setUserId(user.getId());
+            dto.setUserName(user.getUsername());
+        }
+
+        // Product info
+        if (subscription.getPlan() != null &&
+                subscription.getPlan().getProduct() != null) {
+
+            dto.setProductName(
+                    subscription.getPlan().getProduct().getName()
+            );
+        }
+
         return dto;
     }
+
 }
