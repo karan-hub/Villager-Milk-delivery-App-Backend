@@ -23,7 +23,7 @@ public class AdminSeeder implements CommandLineRunner {
         admin.setPhone("9999999999");
         admin.setPassword(passwordEncoder.encode("admin123"));
         admin.setRole(Role.ROLE_ADMIN);
-        admin.setEnable(true);
+        admin.setEnabled(true);
         userRepository.save(admin);
         System.out.println("ADMIN USER CREATED");
 
