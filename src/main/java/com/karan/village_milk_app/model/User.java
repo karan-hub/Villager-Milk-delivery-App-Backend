@@ -44,7 +44,8 @@ public class User implements UserDetails {
     private Instant createdAt =Instant.now();
     private Instant updatedAt = Instant.now();
 
-    private  boolean  enable = true;
+    @Column(nullable = false)
+    private  Boolean  enabled = true;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Address address;
@@ -108,6 +109,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enable;
+        return Boolean.TRUE.equals(this.enabled);
     }
+
 }

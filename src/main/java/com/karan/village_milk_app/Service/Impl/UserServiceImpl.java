@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private  final UserRepository userRepository ;
     private  final ModelMapper modelMapper;
     private  final PasswordEncoder passwordEncoder;
+
     @Override
     public UserDTO createUser(SignupRequest signupRequest) {
         if(signupRequest.getPhone() == null || signupRequest.getPhone().isBlank() || userRepository.existsByPhone(signupRequest.getPhone())) {
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(signupRequest.getPhone());
         user.setPassword(encodedPassword);
         user.setRole(Role.ROLE_USER);
-        user.setEnable(true);
+        user.setEnabled(true);
         user.setCreatedAt(Instant.now());
         user.setUpdatedAt(Instant.now());
 
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
         }
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         dto.setRole(Role.ROLE_USER);
-        dto.setEnable(true);
+        dto.setEnabled(true);
         dto.setCreatedAt(Instant.now());
         dto.setUpdatedAt(Instant.now());
 
@@ -94,8 +95,12 @@ public class UserServiceImpl implements UserService {
         if(dto.getPassword() != null && !dto.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
+        if (dto.getEnabled() != null) {
+            existingUser.setEnabled(dto.getEnabled());
+        }
 
-        existingUser.setEnable(dto.isEnable());
+
+//        existingUser.setEnable(dto.isEnable());
         existingUser.setUpdatedAt(Instant.now());
         User save = userRepository.save(existingUser);
         return  modelMapper.map(save , UserDTO.class);
@@ -142,7 +147,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(phone);
         user.setName("New User");
         user.setRole(Role.ROLE_USER);
-        user.setEnable(true);
+        user.setEnabled(true);
         user.setPassword(null); // OTP-only user
         user.setCreatedAt(Instant.now());
         user.setUpdatedAt(Instant.now());
