@@ -1,73 +1,124 @@
-Write-Host "🚀 Structured commit & push started..." -ForegroundColor Cyan
+# Move to project root (parent of scripts folder)
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Resolve-Path "$ScriptDir\.."
+Set-Location $ProjectRoot
 
-function CommitAndPush($message) {
-    if (-not (git diff --cached --quiet)) {
-        git commit -m "$message"
-        git push origin main
-    } else {
-        Write-Host "⚠️ Nothing staged for: $message" -ForegroundColor Yellow
+Write-Host "Working directory set to project root:"
+Write-Host $ProjectRoot
+Write-Host ""
+
+Write-Host "Starting commit-by-commit push to GitHub..."
+
+function CommitPush {
+    param (
+        [string[]]$Files,
+        [string]$Message
+    )
+
+    Write-Host ""
+    Write-Host "----------------------------------------"
+    Write-Host "Commit: $Message"
+    Write-Host "----------------------------------------"
+
+    # Clear staging
+    git reset --quiet
+
+    # Add files
+    git add $Files
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: git add failed. Check file paths."
+        exit 1
     }
+
+    # Commit
+    git commit -m "$Message"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: git commit failed."
+        exit 1
+    }
+
+    # Push immediately
+    git push origin main
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: git push failed. Stopping script."
+        exit 1
+    }
+
+    Write-Host "SUCCESS: Commit pushed to GitHub."
 }
 
-# --------------------------------------------------
-# COMMIT 1: SECURITY + CONFIG
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Config
-git add src/main/java/com/karan/village_milk_app/Security
-CommitAndPush "feat(security): stabilize jwt, cors and security configuration"
+# ---------------- COMMIT 1 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Controller/AuthController.java",
+    "src/main/java/com/karan/village_milk_app/Request/LoginRequest.java",
+    "src/main/java/com/karan/village_milk_app/model/OtpCode.java",
+    "src/main/java/com/karan/village_milk_app/model/RefreshToken.java"
+) "feat(auth): improve authentication and login flow"
 
-# --------------------------------------------------
-# COMMIT 2: ADMIN CONTROLLERS
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Controller/Admin*
-CommitAndPush "feat(admin): finalize admin controllers for product, subscription and delivery"
+# ---------------- COMMIT 2 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Dto/UserDTO.java",
+    "src/main/java/com/karan/village_milk_app/Dto/AddressDTO.java",
+    "src/main/java/com/karan/village_milk_app/model/User.java",
+    "src/main/java/com/karan/village_milk_app/model/Address.java",
+    "src/main/java/com/karan/village_milk_app/Service/UserService.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/UserServiceImpl.java",
+    "src/main/java/com/karan/village_milk_app/Repositories/UserRepository.java"
+) "feat(user): update user and address domain logic"
 
-# --------------------------------------------------
-# COMMIT 3: SUBSCRIPTIONS CORE + EVENTS
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Service/Subscription*
-git add src/main/java/com/karan/village_milk_app/model/Subscription*
-git add src/main/java/com/karan/village_milk_app/Dto/Subscription*
-CommitAndPush "feat(subscription): complete subscription lifecycle and delivery events"
+# ---------------- COMMIT 3 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Controller/SubscriptionController.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionServiceImpl.java",
+    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionsRepository.java",
+    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionEventsRepository.java"
+) "feat(subscription): enhance subscription core functionality"
 
-# --------------------------------------------------
-# COMMIT 4: ORDERS (BUY ONCE)
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Service/Order*
-git add src/main/java/com/karan/village_milk_app/Controller/OrderController.java
-git add src/main/java/com/karan/village_milk_app/model/Order*
-git add src/main/java/com/karan/village_milk_app/Dto/Order*
-CommitAndPush "feat(order): implement one-time order (buy once) flow"
+# ---------------- COMMIT 4 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Controller/SubscriptionPlanController.java",
+    "src/main/java/com/karan/village_milk_app/Request/CreatePlanRequest.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionPlanServiceImpl.java",
+    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionPlanRepository.java"
+) "feat(subscription-plan): add and update subscription plans"
 
-# --------------------------------------------------
-# COMMIT 5: PRODUCT + SUBSCRIPTION PLAN
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/model/Product.java
-git add src/main/java/com/karan/village_milk_app/Dto/ProductDto.java
-git add src/main/java/com/karan/village_milk_app/Service/Impl/ProductServiceImpl.java
-git add src/main/java/com/karan/village_milk_app/Service/SubscriptionPlanService*
-git add src/main/java/com/karan/village_milk_app/model/SubscriptionPlan.java
-CommitAndPush "feat(product): stabilize product and subscription plan management"
+# ---------------- COMMIT 5 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Dto/CreateSubscriptionRequest.java",
+    "src/main/java/com/karan/village_milk_app/Request/CreateSubscriptionRequest.java",
+    "src/main/java/com/karan/village_milk_app/Response/SubscriptionDto.java",
+    "src/main/java/com/karan/village_milk_app/model/DeliveryDto.java"
+) "refactor(subscription): align subscription DTOs and requests"
 
-# --------------------------------------------------
-# COMMIT 6: ANALYTICS (ADMIN DASHBOARD)
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Controller/AdminAnalyticsController.java
-git add src/main/java/com/karan/village_milk_app/Service/AdminAnalyticsService.java
-git add src/main/java/com/karan/village_milk_app/Service/Impl/AdminAnalyticsServiceImpl.java
-CommitAndPush "feat(analytics): add admin dashboard analytics APIs"
+# ---------------- COMMIT 6 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Request/CreateOrderRequest.java",
+    "src/main/java/com/karan/village_milk_app/Request/CreateOrderItemRequest.java",
+    "src/main/java/com/karan/village_milk_app/Repositories/OrderRepository.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/OrderServiceImpl.java"
+) "feat(order): implement order creation and processing"
 
-# --------------------------------------------------
-# COMMIT 7: REFRESH TOKEN SERVICE
-# --------------------------------------------------
-git add src/main/java/com/karan/village_milk_app/Service/RefreshTokenService.java
-git add src/main/java/com/karan/village_milk_app/Service/Impl/RefreshTokenServiceImpl.java
-CommitAndPush "feat(auth): add refresh token service implementation"
+# ---------------- COMMIT 7 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionOrderScheduler.java"
+) "feat(scheduler): automate order generation for subscriptions"
 
-# --------------------------------------------------
-# COMMIT 8: SCRIPT ITSELF
-# --------------------------------------------------
-git add scripts
-CommitAndPush "chore: add windows powershell script for structured commits"
+# ---------------- COMMIT 8 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Service/AdminSubscriptionService.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/AdminSubscriptionServiceImpl.java"
+) "feat(admin): manage subscriptions from admin panel"
 
-Write-Host "✅ All commits completed successfully!" -ForegroundColor Green
+# ---------------- COMMIT 9 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/Service/AdminService.java",
+    "src/main/java/com/karan/village_milk_app/Service/Impl/AdminServiceImpl.java"
+) "feat(admin): add core admin service operations"
+
+# ---------------- COMMIT 10 ----------------
+CommitPush @(
+    "src/main/java/com/karan/village_milk_app/model/PaymentDto.java"
+) "chore(model): clean up payment and supporting models"
+
+Write-Host ""
+Write-Host "ALL COMMITS PUSHED SEPARATELY TO GITHUB SUCCESSFULLY."
