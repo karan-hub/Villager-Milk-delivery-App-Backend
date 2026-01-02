@@ -1,0 +1,2001 @@
+{
+	"info": {
+		"_postman_id": "13c6be39-bb1f-43c0-af07-3e3d7882fab2",
+		"name": "Villager Milks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39176650"
+	},
+	"item": [
+		{
+			"name": "Auth endpoints",
+			"item": [
+				{
+					"name": "Refresh Token (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"shiv\",\r\n  \"phone\": \"9876543299\",\r\n  \"password\": \"test1234\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"phone\": \"9999999999\",\r\n  \"password\": \"admin123\"\r\n\r\n// USER\r\n//   \"phone\": \"9876543299\",\r\n//   \"password\": \"test1234\"\r\n\r\n//  \"phone\": \"9876543210\",\r\n//   \"password\": \"test1234\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OTP Request (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"phone\": \"9876543210\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/otp/request",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"otp",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OTP Verify (PUBLIC)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"phone\": \"4141414141\",\r\n  \"otp\" : \"914213\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/otp/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"otp",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Endpoints",
+			"item": [
+				{
+					"name": "manage Users",
+					"item": [
+						{
+							"name": "change role of user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Y2I5YmI2ZS1mOTM4LTRhYWQtOTY2MS1mMmIxZDA1YzllMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAxOTc5LCJleHAiOjE3NjYxMDU1NzksInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.ZMd_JaDCTIRTm1rCFdwbliwcQYfapMtLfIFASrQpQHRKh5c3fBpF-4k3q5wFFShxXCKoIPc1Q1WFze2Akvva5A",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/users/a879a5a0-0ca4-4543-9451-4a037cdb5f55/make-admin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										"a879a5a0-0ca4-4543-9451-4a037cdb5f55",
+										"make-admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get User by Phone Number",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Y2I5YmI2ZS1mOTM4LTRhYWQtOTY2MS1mMmIxZDA1YzllMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAxOTc5LCJleHAiOjE3NjYxMDU1NzksInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.ZMd_JaDCTIRTm1rCFdwbliwcQYfapMtLfIFASrQpQHRKh5c3fBpF-4k3q5wFFShxXCKoIPc1Q1WFze2Akvva5A",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/phone/1234567890",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"phone",
+										"1234567890"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Y2I5YmI2ZS1mOTM4LTRhYWQtOTY2MS1mMmIxZDA1YzllMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAxOTc5LCJleHAiOjE3NjYxMDU1NzksInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.ZMd_JaDCTIRTm1rCFdwbliwcQYfapMtLfIFASrQpQHRKh5c3fBpF-4k3q5wFFShxXCKoIPc1Q1WFze2Akvva5A",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/afcaac6f-81e7-4473-9fdc-e6b830f5c2bc",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"afcaac6f-81e7-4473-9fdc-e6b830f5c2bc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get All Users By page",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Y2I5YmI2ZS1mOTM4LTRhYWQtOTY2MS1mMmIxZDA1YzllMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAxOTc5LCJleHAiOjE3NjYxMDU1NzksInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.ZMd_JaDCTIRTm1rCFdwbliwcQYfapMtLfIFASrQpQHRKh5c3fBpF-4k3q5wFFShxXCKoIPc1Q1WFze2Akvva5A",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Manage Products",
+					"item": [
+						{
+							"name": "create product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzZTlkYTI0Zi05YTIzLTRhYzItOTBjNy1jMWRhZDJiYzJmMjIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAyOTcwLCJleHAiOjE3NjYxMDY1NzAsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.ojXNC6j3Beg46BQr3prCr0qp7tmLkRq2HSyIyNBdWMWxywG2T7A-nlvNSoKR6AM9VCV0v7u3-uXGQS3MeHzllg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Fresh buffolw Milk\",\r\n  \"type\": \"buffolw\",\r\n  \"unit\": \"2\",\r\n  \"price\": 90.00,\r\n  \"inStock\": true,\r\n  \"imageUrl\": \"https://example.com/milk.jpg\",\r\n  \"tags\": [\"fresh\", \"organic\"],\r\n  \"highlights\": [\"Farm fresh\", \"No preservatives\"],\r\n  \"benefits\": [\"Rich in calcium\", \"High protein\"],\r\n  \"nutrition\": {\r\n    \"calories\": \"61 kcal\",\r\n    \"protein\": \"3.2g\",\r\n    \"fat\": \"3.3g\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create product Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzZTlkYTI0Zi05YTIzLTRhYzItOTBjNy1jMWRhZDJiYzJmMjIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAyOTcwLCJleHAiOjE3NjYxMDY1NzAsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.ojXNC6j3Beg46BQr3prCr0qp7tmLkRq2HSyIyNBdWMWxywG2T7A-nlvNSoKR6AM9VCV0v7u3-uXGQS3MeHzllg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Fresh buffolw Milk\",\r\n  \"type\": \"buffolw\",\r\n  \"unit\": \"2\",\r\n  \"price\": 90.00,\r\n  \"inStock\": true,\r\n  \"imageUrl\": \"https://example.com/milk.jpg\",\r\n  \"tags\": [\"fresh\", \"organic\"],\r\n  \"highlights\": [\"Farm fresh\", \"No preservatives\"],\r\n  \"benefits\": [\"Rich in calcium\", \"High protein\"],\r\n  \"nutrition\": {\r\n    \"calories\": \"61 kcal\",\r\n    \"protein\": \"3.2g\",\r\n    \"fat\": \"3.3g\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzZTlkYTI0Zi05YTIzLTRhYzItOTBjNy1jMWRhZDJiYzJmMjIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAyOTcwLCJleHAiOjE3NjYxMDY1NzAsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.ojXNC6j3Beg46BQr3prCr0qp7tmLkRq2HSyIyNBdWMWxywG2T7A-nlvNSoKR6AM9VCV0v7u3-uXGQS3MeHzllg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Fresh buffolw Milk\",\r\n  \"type\": \"buffolw\",\r\n  \"unit\": \"2\",\r\n  \"price\": 90.00,\r\n  \"inStock\": true,\r\n  \"imageUrl\": \"https://example.com/milk.jpg\",\r\n  \"tags\": [\"fresh\", \"organic\"],\r\n  \"highlights\": [\"Farm fresh\", \"No preservatives\"],\r\n  \"benefits\": [\"Rich in calcium\", \"High protein\"],\r\n  \"nutrition\": {\r\n    \"calories\": \"61 kcal\",\r\n    \"protein\": \"3.2g\",\r\n    \"fat\": \"3.3g\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/products/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxYjFjNjZjYS1mODRjLTQ0MTUtYTIwOS03MTcwOTNiYWU4ZGMiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MTAzMDkzLCJleHAiOjE3NjYxMDY2OTMsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.XclaHQdVQQbJW0lE3m9oLSerzbAQN6sQgESUB0KkNTIQvOjkLb7Q2w4y1OV5YW0jyDcbihBK5VR9YymIPP27xw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/admin/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Address EndPoints",
+			"item": []
+		},
+		{
+			"name": "Products Endpoints  (Public)",
+			"item": [
+				{
+					"name": "Get Products (PUBLIC)  By Page",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJmMDlkMWQ0MS04OWU0LTRkYjgtYjU1OC04MjkyNWQ3NDEzNjMiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NDg4NzM5LCJleHAiOjE3NjY0OTIzMzksInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vsXFYP3frSU1mrL4P7pykZIeslgOrYkiGUfuNFKwuPX7xMQDwqjFBUfMP2ILXGB6jDNilh8twuTzT5ruGxw0Bg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiYmVmNGM2OS0zOTE5LTQ1MjUtYWI4YS00ZDFhYjhiZDc4NTUiLCJzdWIiOiJhZjIwMWY5Yi0xMjZlLTQyYjUtYWYyNy0wZjY4Mjk2NzBlZDYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MDcxNjk1LCJleHAiOjE3NjYwNzUyOTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiNzM3MzczNzM3MyIsInJvbGVzIjoiUk9MRV9VU0VSIn0._fqCD6Axbx7piSiF_l2VDzjop3sPdSBjoN-NMbD5nqBmqtng8rBPsDYg9i_buTJ3qrQ-felD_G_rITzsSamVJA",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products?page=0&size=4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID (PUBLIC)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiMjZhNjA5NC0yYzM5LTQwZjctYjcwMi04ZmUzOTRhMmI3ZTkiLCJzdWIiOiJlYjcyNmUxYi03ZjZhLTRhZjctOWQxYS0zMWVkMGU2MjM5NTIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTAzOTA1LCJleHAiOjE3NjY1MDc1MDUsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIiwicGhvbmUiOiIxMTExMTIyMjIyIn0.QOQUUUuCD_n3hP6K1Mak7x7ptOUqaoHgKnmeGTpWiABukv4IRjx4bTj5sWadu-z-vtsl7JsnK3RZnNX-N5a1MA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiYmVmNGM2OS0zOTE5LTQ1MjUtYWI4YS00ZDFhYjhiZDc4NTUiLCJzdWIiOiJhZjIwMWY5Yi0xMjZlLTQyYjUtYWYyNy0wZjY4Mjk2NzBlZDYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2MDcxNjk1LCJleHAiOjE3NjYwNzUyOTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiNzM3MzczNzM3MyIsInJvbGVzIjoiUk9MRV9VU0VSIn0._fqCD6Axbx7piSiF_l2VDzjop3sPdSBjoN-NMbD5nqBmqtng8rBPsDYg9i_buTJ3qrQ-felD_G_rITzsSamVJA",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products?id=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscriptions Endpoints",
+			"item": [
+				{
+					"name": "Create  Subscription",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4MzlkNzU0ZS1kZDEwLTQyZmEtYmM4Zi0zMTczMjcyNzhkZDciLCJzdWIiOiJlYjcyNmUxYi03ZjZhLTRhZjctOWQxYS0zMWVkMGU2MjM5NTIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTA0Mjk0LCJleHAiOjE3NjY1MDc4OTQsInBob25lIjoiMTExMTEyMjIyMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.XSUj5a2cnZ2h8-cdLTpWPGW0YmQm9kr18NOdSRkDc62fB5KLHEx4B29ow59YYmx6rZBWdkCXxNpu-ENIy_ERnQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"eb726e1b-7f6a-4af7-9d1a-31ed0e623952\",\r\n  \"planId\": \"de50058a-9fb3-4bdc-8a69-7b3a9d56444c\",\r\n  \"startDate\": \"2025-01-01\",\r\n  \"deliverySlot\": \"MORNING\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create subscription plans",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiMjZhNjA5NC0yYzM5LTQwZjctYjcwMi04ZmUzOTRhMmI3ZTkiLCJzdWIiOiJlYjcyNmUxYi03ZjZhLTRhZjctOWQxYS0zMWVkMGU2MjM5NTIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTAzOTA1LCJleHAiOjE3NjY1MDc1MDUsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIiwicGhvbmUiOiIxMTExMTIyMjIyIn0.QOQUUUuCD_n3hP6K1Mak7x7ptOUqaoHgKnmeGTpWiABukv4IRjx4bTj5sWadu-z-vtsl7JsnK3RZnNX-N5a1MA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"planKey\": \"monthly\",\r\n  \"title\": \"Monthly Cow Milk Plan\",\r\n  \"durationDays\": 30,\r\n  \"units\": 1,\r\n  \"price\": 55,\r\n  \"offer\": \"Save ₹150\",\r\n  \"productId\": \"da92fa20-591d-4916-9648-6a35f942e6e2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Plans",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4MzlkNzU0ZS1kZDEwLTQyZmEtYmM4Zi0zMTczMjcyNzhkZDciLCJzdWIiOiJlYjcyNmUxYi03ZjZhLTRhZjctOWQxYS0zMWVkMGU2MjM5NTIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTA0Mjk0LCJleHAiOjE3NjY1MDc4OTQsInBob25lIjoiMTExMTEyMjIyMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.XSUj5a2cnZ2h8-cdLTpWPGW0YmQm9kr18NOdSRkDc62fB5KLHEx4B29ow59YYmx6rZBWdkCXxNpu-ENIy_ERnQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"planKey\": \"monthly\",\r\n  \"title\": \"Monthly Cow Milk Plan\",\r\n  \"durationDays\": 30,\r\n  \"units\": 1,\r\n  \"price\": 55,\r\n  \"offer\": \"Save ₹150\",\r\n  \"productId\": \"PRODUCT_UUID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription Plans",
+			"item": [
+				{
+					"name": "Get Plans (PUBLIC)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Plan (ADMIN)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"planKey\": \"monthly\",\r\n  \"title\": \"Monthly bufflow Milk\",\r\n  \"durationDays\": 15,\r\n  \"units\": 1,\r\n  \"price\": 55,\r\n  \"offer\": \"Save ₹100\",\r\n  \"productId\": \"da92fa20-591d-4916-9648-6a35f942e6e2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Plan (ADMIN)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"price\": 60\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans/da92fa20-591d-4916-9648-6a35f942e6e2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans",
+								"da92fa20-591d-4916-9648-6a35f942e6e2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Plan (ADMIN)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscription-plans/{planId}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscription-plans",
+								"{planId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscriptions (User)",
+			"item": [
+				{
+					"name": "Create Subscription (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJmZDdhM2M4Ny1kOGE2LTQ0NTEtODY0OS1iY2YxYjA2YzhiZTMiLCJzdWIiOiI2MzYzNjQwNy1iMzAwLTRmNWItODY0ZS1kZDNjY2QwZjU1NmIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjE3ODgyLCJleHAiOjE3NjY2MjE0ODIsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9VU0VSIiwicGhvbmUiOiI5ODc2NTQzMjk5In0.eCXBQvnzkeJNk07NXkMTdPeO9pYYdVQa6uQ5Ff9Z88jEpF7zPEf_AQCgL1i5RRbY9KXLuz7W86yyAwy3YIU9lA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"planId\": \"251df893-493f-428a-afb3-b54b86d1e6dc\",\r\n \"startDate\": \"2025-12-26\",\r\n  \"deliverySlot\": \"EVENING\",\r\n  \"quantity\": 2,\r\n  \"planType\": \"WEEKLY\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Subscriptions (USER)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyYjQ3NTAxOC1hODdlLTRiZTUtYmI1MS01ZmE0ZjM3OWFhMmEiLCJzdWIiOiI2MzYzNjQwNy1iMzAwLTRmNWItODY0ZS1kZDNjY2QwZjU1NmIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjE4NDU5LCJleHAiOjE3NjY2MjIwNTksInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9VU0VSIiwicGhvbmUiOiI5ODc2NTQzMjk5In0.k8atw9HE4JzOPA1Vi-0_QyDwm2G_JrD25G6B5cum8ZMGhLUp2WrvlaoQdKq0l-TMp629kt8EINwSBfSVu3Qe4A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"eb726e1b-7f6a-4af7-9d1a-31ed0e623952\",\r\n  \"planId\": \"de50058a-9fb3-4bdc-8a69-7b3a9d56444c\",\r\n  \"startDate\": \"2025-01-01\",\r\n  \"deliverySlot\": \"MORNING\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions/my",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Skip Delivery (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyYjQ3NTAxOC1hODdlLTRiZTUtYmI1MS01ZmE0ZjM3OWFhMmEiLCJzdWIiOiI2MzYzNjQwNy1iMzAwLTRmNWItODY0ZS1kZDNjY2QwZjU1NmIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjE4NDU5LCJleHAiOjE3NjY2MjIwNTksInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9VU0VSIiwicGhvbmUiOiI5ODc2NTQzMjk5In0.k8atw9HE4JzOPA1Vi-0_QyDwm2G_JrD25G6B5cum8ZMGhLUp2WrvlaoQdKq0l-TMp629kt8EINwSBfSVu3Qe4A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions/events/{eventId}/skip",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions",
+								"events",
+								"{eventId}",
+								"skip"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pause Subscription (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyYjQ3NTAxOC1hODdlLTRiZTUtYmI1MS01ZmE0ZjM3OWFhMmEiLCJzdWIiOiI2MzYzNjQwNy1iMzAwLTRmNWItODY0ZS1kZDNjY2QwZjU1NmIiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjE4NDU5LCJleHAiOjE3NjY2MjIwNTksInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9VU0VSIiwicGhvbmUiOiI5ODc2NTQzMjk5In0.k8atw9HE4JzOPA1Vi-0_QyDwm2G_JrD25G6B5cum8ZMGhLUp2WrvlaoQdKq0l-TMp629kt8EINwSBfSVu3Qe4A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions/ca634b16-2f05-4764-ab17-0dfaa3e89a58/pause",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions",
+								"ca634b16-2f05-4764-ab17-0dfaa3e89a58",
+								"pause"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resume Subscription (USER)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions/{subscriptionId}/resume",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions",
+								"{subscriptionId}",
+								"resume"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Subscription (USER)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/subscriptions/{subscriptionId}/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"subscriptions",
+								"{subscriptionId}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Y2EzMzA1Yy0yMWQ1LTQwYzgtYjFlOC00MzYzOTljMzQwNGYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA4NjIxLCJleHAiOjE3NjY2MTIyMjEsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.zvOQdPp_yWl22Y2mhYwbzsjA90_3dMGK16-BR1hWfKSJto0oHdGzsv5y9eFIXHLMyx2ye2hYPl9DbUWVlpns0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/user/293aa8e5-784e-4dc5-8caa-db3d13aa377b",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"293aa8e5-784e-4dc5-8caa-db3d13aa377b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJlZWYwMzBiYy1iN2FiLTQxOTMtYTllNS1iOTExMmRlMTZkYjUiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzMTgxLCJleHAiOjE3NjY1MjY3ODEsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.AP_AHIhdFSa7QTVD8HSOYirPIGEcnwxfDJUFDIFjvpaZKTSraykdwoVbmIm_1rdbwvj83Wj-KODo5ab7NU2BFA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"shiv naresh\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/user/293aa8e5-784e-4dc5-8caa-db3d13aa377b",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"293aa8e5-784e-4dc5-8caa-db3d13aa377b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin - Users",
+			"item": [
+				{
+					"name": "Get All Users (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Y2EzMzA1Yy0yMWQ1LTQwYzgtYjFlOC00MzYzOTljMzQwNGYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA4NjIxLCJleHAiOjE3NjY2MTIyMjEsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.zvOQdPp_yWl22Y2mhYwbzsjA90_3dMGK16-BR1hWfKSJto0oHdGzsv5y9eFIXHLMyx2ye2hYPl9DbUWVlpns0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users?page=0&size=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Phone (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Y2EzMzA1Yy0yMWQ1LTQwYzgtYjFlOC00MzYzOTljMzQwNGYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA4NjIxLCJleHAiOjE3NjY2MTIyMjEsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.zvOQdPp_yWl22Y2mhYwbzsjA90_3dMGK16-BR1hWfKSJto0oHdGzsv5y9eFIXHLMyx2ye2hYPl9DbUWVlpns0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "phone",
+								"value": "1020304050",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users/phone/1020304050",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"users",
+								"phone",
+								"1020304050"
+							],
+							"query": [
+								{
+									"key": "phone",
+									"value": "1020304050",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Admin User\",\r\n  \"phone\": \"8888888888\",\r\n  \"password\": \"admin123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Make Admin (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users/293aa8e5-784e-4dc5-8caa-db3d13aa377b/make-admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"users",
+								"293aa8e5-784e-4dc5-8caa-db3d13aa377b",
+								"make-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (ADMIN)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users/{userId}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"users",
+								"{userId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin - Products",
+			"item": [
+				{
+					"name": "Get Products (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/products?page=0&size=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Buffalo Milk\",\r\n  \"price\": 65,\r\n  \"unit\": \"LITER\",\r\n  \"type\": \"BUFFALO\",\r\n  \"inStock\": true,\r\n  \"imageUrl\":\"http://karan-bhai.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"price\": 70\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/products/2815e89c-a5ed-4093-91a4-98df2e94b651",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products",
+								"2815e89c-a5ed-4093-91a4-98df2e94b651"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/products/89f83869-50c8-4777-86c7-57932fff817a",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products",
+								"89f83869-50c8-4777-86c7-57932fff817a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin - Subscriptions",
+			"item": [
+				{
+					"name": "Get All Subscriptions (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJhM2Q5YjVkMS1hODczLTRhNzktOWU4ZC03YTVmNmYyZjMxNjgiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIzNjQ1LCJleHAiOjE3NjY1MjcyNDUsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInR5cCI6ImFjY2VzcyJ9.vAajVAZ7-y_2WkFmNBDVnMd9jCVWia4-q0lSm9tHSVFzi000_jJ1cCN0gh57YzhetwcC0s7HwVBLcRCaMRu0Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/subscriptions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subscriptions Only ACTIVE (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJlMDY0OTEwMC0wN2U4LTRkOWYtODhkZi0xZGNkNTVlNmRlMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTI3MjY2LCJleHAiOjE3NjY1MzA4NjYsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.s3ZwBr8Gyv7O9aGSYn1hMKvi-H_g-agwNrwrIJARJcf6IQu5UZCnShDQq8xrEM9AsfaFfqEY2MRdfx2siWUZDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/subscriptions?status=ACTIVE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"subscriptions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "ACTIVE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subscriptions  Only PAUSED (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJlMDY0OTEwMC0wN2U4LTRkOWYtODhkZi0xZGNkNTVlNmRlMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTI3MjY2LCJleHAiOjE3NjY1MzA4NjYsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.s3ZwBr8Gyv7O9aGSYn1hMKvi-H_g-agwNrwrIJARJcf6IQu5UZCnShDQq8xrEM9AsfaFfqEY2MRdfx2siWUZDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/subscriptions?status=PAUSED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"subscriptions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PAUSED"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin - Deliveries",
+			"item": [
+				{
+					"name": "Deliveries   Today Deliveries (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2ZTQ0ZDA4ZC00MGY2LTQ2MmQtOTcxNy04NDY3YTMwMjcyNzYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA5ODczLCJleHAiOjE3NjY2MTM0NzMsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTg3NjU0MzIxMCIsInR5cCI6ImFjY2VzcyJ9.NBR8tSTxuQUgqewNiZt6Ttk46Gdmja6eiD40aWubxxCX2QHQwjSHR8Xv0HabyftVrM4k5SGK6Dz8ZKtM_0wCDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/deliveries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Today – scheduled Deliveries   (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2ZTQ0ZDA4ZC00MGY2LTQ2MmQtOTcxNy04NDY3YTMwMjcyNzYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA5ODczLCJleHAiOjE3NjY2MTM0NzMsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTg3NjU0MzIxMCIsInR5cCI6ImFjY2VzcyJ9.NBR8tSTxuQUgqewNiZt6Ttk46Gdmja6eiD40aWubxxCX2QHQwjSHR8Xv0HabyftVrM4k5SGK6Dz8ZKtM_0wCDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/deliveries?status=SCHEDULED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "SCHEDULED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Specific date– scheduled Deliveries   (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2ZTQ0ZDA4ZC00MGY2LTQ2MmQtOTcxNy04NDY3YTMwMjcyNzYiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NjA5ODczLCJleHAiOjE3NjY2MTM0NzMsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTg3NjU0MzIxMCIsInR5cCI6ImFjY2VzcyJ9.NBR8tSTxuQUgqewNiZt6Ttk46Gdmja6eiD40aWubxxCX2QHQwjSHR8Xv0HabyftVrM4k5SGK6Dz8ZKtM_0wCDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/deliveries?date=2025-01-13",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2025-01-13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Date + status– scheduled Deliveries   (ADMIN)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJlMDY0OTEwMC0wN2U4LTRkOWYtODhkZi0xZGNkNTVlNmRlMDciLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTI3MjY2LCJleHAiOjE3NjY1MzA4NjYsInR5cCI6ImFjY2VzcyIsInJvbGVzIjoiUk9MRV9BRE1JTiIsInBob25lIjoiOTk5OTk5OTk5OSJ9.s3ZwBr8Gyv7O9aGSYn1hMKvi-H_g-agwNrwrIJARJcf6IQu5UZCnShDQq8xrEM9AsfaFfqEY2MRdfx2siWUZDw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/deliveries?date=2025-01-12&status=DELIVERED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2025-01-12"
+								},
+								{
+									"key": "status",
+									"value": "DELIVERED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Delivered (ADMIN)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "/api/v1/admin/deliveries/{eventId}/deliver",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries",
+								"{eventId}",
+								"deliver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Missed (ADMIN)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/deliveries/{eventId}/missed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"deliveries",
+								"{eventId}",
+								"missed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ORDERS – BUY ONCE (USER)",
+			"item": [
+				{
+					"name": "Place Order (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4MTJkNmMwYS0xMWIxLTQ5NjEtYTE0Yi04M2JiYjYzOWMwNDMiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIyNTMwLCJleHAiOjE3NjY1MjYxMzAsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.1Z_sKJoamxTBN8ExG3PHqibzS9rY5nAE73nz9wzZ3XRRLLj_6nl2Vu6WNnDtTo2Zh4Nvin46N6t5odCxZigGvA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"deliverySlot\": \"EVENING\",\r\n  \"deliveryDate\": \"2025-01-12T18:00:00\",\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"da92fa20-591d-4916-9648-6a35f942e6e2\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Orders (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4MTJkNmMwYS0xMWIxLTQ5NjEtYTE0Yi04M2JiYjYzOWMwNDMiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIyNTMwLCJleHAiOjE3NjY1MjYxMzAsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.1Z_sKJoamxTBN8ExG3PHqibzS9rY5nAE73nz9wzZ3XRRLLj_6nl2Vu6WNnDtTo2Zh4Nvin46N6t5odCxZigGvA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/orders/my",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order by ID (USER)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4MTJkNmMwYS0xMWIxLTQ5NjEtYTE0Yi04M2JiYjYzOWMwNDMiLCJzdWIiOiIyOTNhYThlNS03ODRlLTRkYzUtOGNhYS1kYjNkMTNhYTM3N2IiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY2NTIyNTMwLCJleHAiOjE3NjY1MjYxMzAsInBob25lIjoiOTg3NjU0MzIxMCIsInJvbGVzIjoiUk9MRV9VU0VSIiwidHlwIjoiYWNjZXNzIn0.1Z_sKJoamxTBN8ExG3PHqibzS9rY5nAE73nz9wzZ3XRRLLj_6nl2Vu6WNnDtTo2Zh4Nvin46N6t5odCxZigGvA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/orders/7d24cb7d-82cc-4856-a5d5-2ccf4751f257",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"7d24cb7d-82cc-4856-a5d5-2ccf4751f257"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Analytics Endpoint (ADMIN)",
+			"item": [
+				{
+					"name": "dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkYzE4ZTliNi1jMjEwLTQ5ZWUtOTAzOC1lNjBiYjU5Njk5OGIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY3MzMzODE1LCJleHAiOjE3NjczMzc0MTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.PbbHZNXrHYYU5hDMSWpBbRRmA-l7Q-oJtCNiiPzcprGVRPzGQI-sXEuuTk-sq7c8dF9QbB7rdrxyQaX9L2AZPg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/analytics/dashboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"analytics",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkYzE4ZTliNi1jMjEwLTQ5ZWUtOTAzOC1lNjBiYjU5Njk5OGIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY3MzMzODE1LCJleHAiOjE3NjczMzc0MTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.PbbHZNXrHYYU5hDMSWpBbRRmA-l7Q-oJtCNiiPzcprGVRPzGQI-sXEuuTk-sq7c8dF9QbB7rdrxyQaX9L2AZPg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/analytics/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"analytics",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subscriptions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkYzE4ZTliNi1jMjEwLTQ5ZWUtOTAzOC1lNjBiYjU5Njk5OGIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY3MzMzODE1LCJleHAiOjE3NjczMzc0MTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.PbbHZNXrHYYU5hDMSWpBbRRmA-l7Q-oJtCNiiPzcprGVRPzGQI-sXEuuTk-sq7c8dF9QbB7rdrxyQaX9L2AZPg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/analytics/subscriptions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"analytics",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deliveries",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkYzE4ZTliNi1jMjEwLTQ5ZWUtOTAzOC1lNjBiYjU5Njk5OGIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY3MzMzODE1LCJleHAiOjE3NjczMzc0MTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.PbbHZNXrHYYU5hDMSWpBbRRmA-l7Q-oJtCNiiPzcprGVRPzGQI-sXEuuTk-sq7c8dF9QbB7rdrxyQaX9L2AZPg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/analytics/deliveries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"analytics",
+								"deliveries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revenue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkYzE4ZTliNi1jMjEwLTQ5ZWUtOTAzOC1lNjBiYjU5Njk5OGIiLCJzdWIiOiI4NmM3NzBiNi1kNTQ2LTRmNjItYTQzNS03YTgwN2YzZTgyNzYiLCJpc3MiOiJhcGkudmlsbGFnZW1pbGsuY29tIiwiaWF0IjoxNzY3MzMzODE1LCJleHAiOjE3NjczMzc0MTUsInR5cCI6ImFjY2VzcyIsInBob25lIjoiOTk5OTk5OTk5OSIsInJvbGVzIjoiUk9MRV9BRE1JTiJ9.PbbHZNXrHYYU5hDMSWpBbRRmA-l7Q-oJtCNiiPzcprGVRPzGQI-sXEuuTk-sq7c8dF9QbB7rdrxyQaX9L2AZPg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/analytics/revenue",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"analytics",
+								"revenue"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
