@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -45,9 +46,9 @@ public class AdminAnalyticsController {
     @GetMapping("/revenue")
     public ResponseEntity<Map<String, Object>> getRevenueStatistics(
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant startDate,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant endDate) {
         return ResponseEntity.ok(adminAnalyticsService.getRevenueStatistics(startDate, endDate));
     }
 }

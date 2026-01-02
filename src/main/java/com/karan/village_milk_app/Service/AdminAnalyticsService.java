@@ -1,5 +1,6 @@
 package com.karan.village_milk_app.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public interface AdminAnalyticsService {
     /**
      * Get revenue statistics for a specific date range
      */
-    Map<String, Object> getRevenueStatistics(LocalDate startDate, LocalDate endDate);
+    Map<String, Object> getRevenueStatistics(Instant startDate, Instant endDate);
 
     /**
      * Get overall dashboard statistics

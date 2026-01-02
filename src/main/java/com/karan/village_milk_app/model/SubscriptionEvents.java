@@ -25,21 +25,25 @@ public class SubscriptionEvents {
     @Column(name = "event_id", columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_id", columnDefinition = "BINARY(16)")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "subscription_id", columnDefinition = "BINARY(16)", nullable = false)
     private Subscriptions subscription;
 
+    @Column(nullable = false)
     private LocalDate deliveryDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DeliverySlot deliverySlot;
 
     private Integer deliveredQuantity;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EventStatus status;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
 

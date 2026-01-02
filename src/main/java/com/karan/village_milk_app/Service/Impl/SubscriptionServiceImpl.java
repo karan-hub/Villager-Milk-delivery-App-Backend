@@ -107,7 +107,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setStatus(SubscriptionStatus.CANCELLED);
 
         List<SubscriptionEvents> futureEvents =
-                eventRepo.findBySubscriptionIdAndDeliveryDateAfter(
+                eventRepo.findBySubscription_IdAndDeliveryDateAfter(
                         subscriptionId,
                         LocalDate.now()
                 );
@@ -132,7 +132,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setStatus(SubscriptionStatus.PAUSED);
 
         List<SubscriptionEvents> futureEvents =
-                eventRepo.findBySubscriptionIdAndDeliveryDateAfter(
+                eventRepo.findBySubscription_IdAndDeliveryDateAfter(
                         subscriptionId,
                         LocalDate.now()
                 );
@@ -159,7 +159,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setStatus(SubscriptionStatus.ACTIVE);
 
         List<SubscriptionEvents> futureEvents =
-                eventRepo.findBySubscriptionIdAndDeliveryDateAfter(
+                eventRepo.findBySubscription_IdAndDeliveryDateAfter(
                         subscriptionId,
                         LocalDate.now()
                 );

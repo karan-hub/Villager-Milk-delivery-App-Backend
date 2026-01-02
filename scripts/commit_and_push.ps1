@@ -1,124 +1,74 @@
-# Move to project root (parent of scripts folder)
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Resolve-Path "$ScriptDir\.."
-Set-Location $ProjectRoot
+# =========================================
+# Admin Analytics & Subscription Commits
+# =========================================
 
-Write-Host "Working directory set to project root:"
-Write-Host $ProjectRoot
-Write-Host ""
+Write-Host "Starting commit & push process..." -ForegroundColor Green
+Set-Location (git rev-parse --show-toplevel)
 
-Write-Host "Starting commit-by-commit push to GitHub..."
+Write-Host "Starting commit & push process..." -ForegroundColor Green
 
-function CommitPush {
-    param (
-        [string[]]$Files,
-        [string]$Message
-    )
+git add .
+git commit -m "Fix time-type mismatch between LocalDateTime and Instant in analytics
 
-    Write-Host ""
-    Write-Host "----------------------------------------"
-    Write-Host "Commit: $Message"
-    Write-Host "----------------------------------------"
+Resolved runtime errors caused by mixing LocalDateTime and Instant in repository
+queries and service logic. Standardized timestamp-based analytics to use Instant
+consistently, preventing InvalidDataAccessApiUsageException.
 
-    # Clear staging
-    git reset --quiet
+Future improvement: Define and document clear time-handling guidelines
+to avoid temporal type mismatches across layers."
 
-    # Add files
-    git add $Files
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: git add failed. Check file paths."
-        exit 1
-    }
+Write-Host "Commit 1 completed" -ForegroundColor Green
 
-    # Commit
-    git commit -m "$Message"
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: git commit failed."
-        exit 1
-    }
+# Commit 2
+git add .
+git commit -m "Align SubscriptionEvents queries with LocalDate deliveryDate
 
-    # Push immediately
-    git push origin main
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: git push failed. Stopping script."
-        exit 1
-    }
+Corrected delivery analytics by using LocalDate for deliveryDate as per domain
+design. Removed incorrect Instant-based comparisons and fixed service logic
+to reflect day-level delivery semantics.
 
-    Write-Host "SUCCESS: Commit pushed to GitHub."
-}
+Future improvement: Add shared utility methods for Instant to LocalDate
+conversion at service boundaries."
 
-# ---------------- COMMIT 1 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Controller/AuthController.java",
-    "src/main/java/com/karan/village_milk_app/Request/LoginRequest.java",
-    "src/main/java/com/karan/village_milk_app/model/OtpCode.java",
-    "src/main/java/com/karan/village_milk_app/model/RefreshToken.java"
-) "feat(auth): improve authentication and login flow"
+Write-Host "Commit 2 completed" -ForegroundColor Green
 
-# ---------------- COMMIT 2 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Dto/UserDTO.java",
-    "src/main/java/com/karan/village_milk_app/Dto/AddressDTO.java",
-    "src/main/java/com/karan/village_milk_app/model/User.java",
-    "src/main/java/com/karan/village_milk_app/model/Address.java",
-    "src/main/java/com/karan/village_milk_app/Service/UserService.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/UserServiceImpl.java",
-    "src/main/java/com/karan/village_milk_app/Repositories/UserRepository.java"
-) "feat(user): update user and address domain logic"
+# Commit 3
+git add .
+git commit -m "Fix Spring Data repository method names for entity relationships
 
-# ---------------- COMMIT 3 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Controller/SubscriptionController.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionServiceImpl.java",
-    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionsRepository.java",
-    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionEventsRepository.java"
-) "feat(subscription): enhance subscription core functionality"
+Updated repository method naming to correctly reference nested entity
+properties (e.g., subscription.id, user.id). This prevents query resolution
+failures caused by non-existent direct ID fields.
 
-# ---------------- COMMIT 4 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Controller/SubscriptionPlanController.java",
-    "src/main/java/com/karan/village_milk_app/Request/CreatePlanRequest.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionPlanServiceImpl.java",
-    "src/main/java/com/karan/village_milk_app/Repositories/SubscriptionPlanRepository.java"
-) "feat(subscription-plan): add and update subscription plans"
+Future improvement: Add repository-level tests to validate Spring Data
+query method parsing during CI."
 
-# ---------------- COMMIT 5 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Dto/CreateSubscriptionRequest.java",
-    "src/main/java/com/karan/village_milk_app/Request/CreateSubscriptionRequest.java",
-    "src/main/java/com/karan/village_milk_app/Response/SubscriptionDto.java",
-    "src/main/java/com/karan/village_milk_app/model/DeliveryDto.java"
-) "refactor(subscription): align subscription DTOs and requests"
+Write-Host "Commit 3 completed" -ForegroundColor Green
 
-# ---------------- COMMIT 6 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Request/CreateOrderRequest.java",
-    "src/main/java/com/karan/village_milk_app/Request/CreateOrderItemRequest.java",
-    "src/main/java/com/karan/village_milk_app/Repositories/OrderRepository.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/OrderServiceImpl.java"
-) "feat(order): implement order creation and processing"
+# Commit 4
+git add .
+git commit -m "Correct OrderRepository to use Instant-based createdAt analytics
 
-# ---------------- COMMIT 7 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionOrderScheduler.java"
-) "feat(scheduler): automate order generation for subscriptions"
+Aligned OrderRepository analytics methods with Instant-based createdAt field
+in Orders entity. Replaced incorrect LocalDateTime parameters with Instant
+and fixed aggregation queries accordingly.
 
-# ---------------- COMMIT 8 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Service/AdminSubscriptionService.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/AdminSubscriptionServiceImpl.java"
-) "feat(admin): manage subscriptions from admin panel"
+Future improvement: Add database indexes on created_at for improved
+analytics performance."
 
-# ---------------- COMMIT 9 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/Service/AdminService.java",
-    "src/main/java/com/karan/village_milk_app/Service/Impl/AdminServiceImpl.java"
-) "feat(admin): add core admin service operations"
+Write-Host "Commit 4 completed" -ForegroundColor Green
 
-# ---------------- COMMIT 10 ----------------
-CommitPush @(
-    "src/main/java/com/karan/village_milk_app/model/PaymentDto.java"
-) "chore(model): clean up payment and supporting models"
+# Commit 5
+git add .
+git commit -m "Stabilize admin dashboard analytics with consistent date handling
 
-Write-Host ""
-Write-Host "ALL COMMITS PUSHED SEPARATELY TO GITHUB SUCCESSFULLY."
+Finalized dashboard analytics by consistently using Instant for revenue and
+user metrics, and LocalDate for delivery metrics. Fixed incorrect 'today'
+calculations caused by mixing date and time logic.
+
+Future improvement: Refactor dashboard analytics into smaller components
+and add unit tests for timezone and boundary cases."
+
+Write-Host "Commit 5 completed" -ForegroundColor Green
+
+Write-Host "All commits created successfully." -ForegroundColor Cyan

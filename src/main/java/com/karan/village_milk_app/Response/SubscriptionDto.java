@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -18,7 +19,7 @@ public class SubscriptionDto {
     private LocalDate endDate;
     private DeliverySlot deliverySlot;
     private SubscriptionStatus status;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     private UUID userId;
     private UUID planId;
 

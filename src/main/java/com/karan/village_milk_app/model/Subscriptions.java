@@ -57,7 +57,7 @@ public class Subscriptions {
 
     @CreatedDate
     @Column(updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 }
 
 

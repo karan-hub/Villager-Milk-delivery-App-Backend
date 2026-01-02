@@ -33,8 +33,7 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
 
         Map<String, Object> stats = new HashMap<>();
 
-        LocalDateTime thirtyDaysAgo =
-                LocalDateTime.now().minusDays(30);
+        Instant thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS);
 
         stats.put("totalUsers", userRepository.count());
         stats.put("activeUsers", userRepository.countByRole(Role.ROLE_USER));
@@ -55,8 +54,7 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
 
         Map<String, Object> stats = new HashMap<>();
 
-        LocalDateTime thirtyDaysAgo =
-                LocalDateTime.now().minusDays(30);
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minus(30, ChronoUnit.DAYS);
 
         stats.put("totalSubscriptions", subscriptionsRepository.count());
         stats.put(
@@ -80,7 +78,7 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
     }
 
     /* =========================================================
-       DELIVERY STATISTICS
+       DELIVERY STATISTICS (LocalDate-based)
        ========================================================= */
     @Override
     public Map<String, Object> getDeliveryStatistics(
@@ -91,9 +89,14 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
         Map<String, Object> stats = new HashMap<>();
 
         LocalDate start =
-                (startDate != null) ? startDate : LocalDate.now().minusDays(30);
+                (startDate != null)
+                        ? startDate
+                        : LocalDate.now(ZoneOffset.UTC).minusDays(30);
+
         LocalDate end =
-                (endDate != null) ? endDate : LocalDate.now();
+                (endDate != null)
+                        ? endDate
+                        : LocalDate.now(ZoneOffset.UTC);
 
         long total =
                 eventsRepository.countByDeliveryDateBetween(start, end);
@@ -130,40 +133,35 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
     }
 
     /* =========================================================
-       REVENUE STATISTICS
+       REVENUE STATISTICS (Instant-based)
        ========================================================= */
     @Override
     public Map<String, Object> getRevenueStatistics(
-            LocalDate startDate,
-            LocalDate endDate
+            Instant startDate,
+            Instant endDate
     ) {
 
         Map<String, Object> stats = new HashMap<>();
 
-        LocalDate start =
-                (startDate != null) ? startDate : LocalDate.now().minusDays(30);
-        LocalDate end =
-                (endDate != null) ? endDate : LocalDate.now();
+        Instant start =
+                (startDate != null)
+                        ? startDate
+                        : Instant.now().minus(30, ChronoUnit.DAYS);
 
-        LocalDateTime startDateTime =
-                start.atStartOfDay();
-
-        LocalDateTime endDateTime =
-                end.atTime(LocalTime.MAX);
+        Instant end =
+                (endDate != null)
+                        ? endDate
+                        : Instant.now();
 
         BigDecimal orderRevenue =
-                orderRepository.sumTotalAmountByCreatedAtBetween(
-                        startDateTime, endDateTime
-                );
+                orderRepository.sumTotalAmountByCreatedAtBetween(start, end);
 
         if (orderRevenue == null) {
             orderRevenue = BigDecimal.ZERO;
         }
 
         long orderCount =
-                orderRepository.countByCreatedAtBetween(
-                        startDateTime, endDateTime
-                );
+                orderRepository.countByCreatedAtBetween(start, end);
 
         stats.put("totalRevenue", orderRevenue);
         stats.put("orderRevenue", orderRevenue);
@@ -177,7 +175,7 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
     }
 
     /* =========================================================
-       DASHBOARD STATISTICS
+       DASHBOARD STATISTICS (FIXED)
        ========================================================= */
     @Override
     public Map<String, Object> getDashboardStatistics() {
@@ -189,7 +187,8 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
         dashboard.put("deliveryStats", getDeliveryStatistics(null, null));
         dashboard.put("revenueStats", getRevenueStatistics(null, null));
 
-        LocalDate today = LocalDate.now();
+        // ✅ Correct: deliveryDate is LocalDate
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
 
         long todaysDeliveries =
                 eventsRepository.countByDeliveryDate(today);
@@ -214,3 +213,5 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
         return dashboard;
     }
 }
+
+
