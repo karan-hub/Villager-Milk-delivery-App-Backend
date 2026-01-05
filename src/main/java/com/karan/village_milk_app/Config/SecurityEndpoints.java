@@ -20,7 +20,8 @@ public class SecurityEndpoints {
     public static final List<String> USER_ENDPOINTS = List.of(
             "/api/v1/subscriptions/**",
             "/api/v1/orders/**",
-            "/api/v1/user/**"
+            "/api/v1/user/**",
+            "/api/v1/addresses/**"
     );
 
     public static final List<String> ADMIN_ENDPOINTS = List.of(
