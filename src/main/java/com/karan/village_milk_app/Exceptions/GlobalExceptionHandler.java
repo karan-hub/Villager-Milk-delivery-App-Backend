@@ -57,5 +57,16 @@ public class GlobalExceptionHandler extends RuntimeException {
 
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse>  handleResourceNotFoundException(BadRequestException  exception){
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse>  handleResourceNotFoundException(UnauthorizedException  exception){
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 }
 
