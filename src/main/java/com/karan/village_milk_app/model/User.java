@@ -47,8 +47,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private  Boolean  enabled = true;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Address address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Address> addresses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -110,6 +110,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return Boolean.TRUE.equals(this.enabled);
+    }
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setUser(this);
+    }
+
+    public void removeAddress(Address address) {
+        addresses.remove(address);
+        address.setUser(null);
     }
 
 }
