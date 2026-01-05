@@ -6,6 +6,7 @@ import com.karan.village_milk_app.Service.UserService;
 import com.karan.village_milk_app.model.Type.Role;
 import com.karan.village_milk_app.model.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class AdminController {
     private final UserService userService;
 
     @PutMapping("/{id}/make-admin")
-    public ResponseEntity<Void> makeAdmin(@PathVariable UUID id) {
+    public ResponseEntity<Void> makeAdmin(@PathVariable UUID id) throws BadRequestException {
         userService.makeAdmin(id.toString());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) throws BadRequestException {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

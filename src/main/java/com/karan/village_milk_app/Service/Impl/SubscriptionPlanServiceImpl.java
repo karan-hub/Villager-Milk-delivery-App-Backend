@@ -7,6 +7,7 @@ import com.karan.village_milk_app.healpers.UserHelper;
 import com.karan.village_milk_app.model.*;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
 
     @Override
     @Transactional(readOnly = true)
-    public SubscriptionPlanDto getPlanById(String id) {
+    public SubscriptionPlanDto getPlanById(String id) throws BadRequestException {
 
         UUID planId = UserHelper.parseUUID(id);
 
@@ -44,6 +45,16 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
 
         return modelMapper.map(plan, SubscriptionPlanDto.class);
     }
+
+    @Override
+    public List<SubscriptionPlanDto> getPlansByProductId(UUID productId) {
+        return planRepository.findAllByProduct_Id(productId)
+                .stream()
+                .map(plan -> modelMapper.map(plan, SubscriptionPlanDto.class))
+                .toList();
+    }
+
+
 
     @Override
     public SubscriptionPlanDto createPlan(SubscriptionPlanDto dto) {
@@ -67,7 +78,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     }
 
     @Override
-    public SubscriptionPlanDto updatePlan(String id, SubscriptionPlanDto dto) {
+    public SubscriptionPlanDto updatePlan(String id, SubscriptionPlanDto dto) throws BadRequestException {
 
         UUID planId = UserHelper.parseUUID(id);
 
@@ -92,7 +103,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     }
 
     @Override
-    public void deletePlan(String id) {
+    public void deletePlan(String id) throws BadRequestException {
 
         UUID planId = UserHelper.parseUUID(id);
         planRepository.deleteById(planId);

@@ -8,6 +8,7 @@ import com.karan.village_milk_app.Service.Impl.ProductServiceImpl;
 import com.karan.village_milk_app.Service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,12 +36,12 @@ public class AdminProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable UUID productId,
-            @RequestBody ProductDto dto) {
+            @RequestBody ProductDto dto) throws BadRequestException {
         return ResponseEntity.ok(adminService.updateProduct(productId, dto));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) throws BadRequestException {
         adminService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
