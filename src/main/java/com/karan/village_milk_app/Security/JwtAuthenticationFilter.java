@@ -1,5 +1,6 @@
 package com.karan.village_milk_app.Security;
 
+import com.karan.village_milk_app.Config.SecurityEndpoints;
 import com.karan.village_milk_app.Repositories.UserRepository;
 import com.karan.village_milk_app.healpers.UserHelper;
 import io.jsonwebtoken.Claims;
@@ -17,11 +18,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final  JwtService jwtService ;
     private final UserRepository userRepository ;
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher(); ;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -87,6 +92,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return  request.getRequestURI().startsWith("/api/v1/auth");
+        String requestURI = request.getRequestURI();
+
+        return   SecurityEndpoints.PUBLIC_ENDPOINTS.stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
     }
 }
