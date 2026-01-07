@@ -12,6 +12,7 @@ import com.karan.village_milk_app.model.Type.Role;
 import com.karan.village_milk_app.model.User;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,7 +33,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) throws BadRequestException {
         UUID currentUserId = getCurrentUserId();
         UUID requestedId = UserHelper.parseUUID(userId);
         if (!currentUserId.equals(requestedId) && !isAdmin()) {
@@ -45,7 +46,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable String userId) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable String userId) throws BadRequestException {
         UUID currentUserId = getCurrentUserId();
         UUID requestedId = UserHelper.parseUUID(userId);
         if (!currentUserId.equals(requestedId) && !isAdmin()) {

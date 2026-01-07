@@ -4,9 +4,11 @@ import com.karan.village_milk_app.Dto.ProductDto;
 import com.karan.village_milk_app.Dto.SubscriptionEventDto;
 import com.karan.village_milk_app.Dto.SubscriptionPlanDto;
 import com.karan.village_milk_app.Dto.UserDTO;
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Response.DeliveryRuleResponse;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.healpers.OtpGenerator;
 import com.karan.village_milk_app.model.*;
+import com.karan.village_milk_app.model.Type.PlanType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 import java.time.Clock;
+import java.util.List;
 
 @Configuration
 public class ProjectConfig {
@@ -60,34 +63,74 @@ public class ProjectConfig {
                             SubscriptionPlanDto::setProductName);
                 });
 
-        // ===================== SUBSCRIPTIONS =====================
+// ===================== SUBSCRIPTIONS =====================
 
-        mapper.typeMap(Subscriptions.class, SubscriptionDto.class)
-                .addMappings(m -> {
+        mapper.typeMap(Subscriptions.class, SubscriptionResponse.class)
+                .setPostConverter(ctx -> {
 
-                    // ID mapping
-                    m.map(Subscriptions::getId,
-                            SubscriptionDto::setSubscriptionId);
+                    Subscriptions src = ctx.getSource();
+                    if (src == null) return ctx.getDestination();
 
-                    // Plan info
-                    m.map(src -> src.getPlan().getTitle(),
-                            SubscriptionDto::setPlanTitle);
+                    SubscriptionResponse dest = ctx.getDestination();
 
-                    m.map(src -> src.getPlan().getId(),
-                            SubscriptionDto::setPlanId);
+                    // ===== Common fields =====
+                    dest.setSubscriptionId(src.getId());
+                    dest.setUserId(src.getUser().getId());
 
-                    // Product info (via plan)
-                    m.map(src -> src.getPlan().getProduct().getName(),
-                            SubscriptionDto::setProductName);
 
-                    // Quantity → units
-                    m.map(Subscriptions::getQuantity,
-                            SubscriptionDto::setUnits);
+                    dest.setProductName(src.getProduct().getName());
 
-                    // User
-                    m.map(src -> src.getUser().getId(),
-                            SubscriptionDto::setUserId);
+                    dest.setStartDate(src.getStartDate());
+                    dest.setEndDate(src.getEndDate());
+                    dest.setDeliverySlot(src.getDeliverySlot());
+                    dest.setStatus(src.getStatus());
+                    dest.setCreatedAt(src.getCreatedAt());
+
+                    // ===== PREDEFINED subscription =====
+                    if (src.getPlanType() == PlanType.PREDEFINED) {
+
+                        dest.setPlanId(src.getPlan().getId());
+                        dest.setPlanTitle(src.getPlan().getTitle());
+
+                        // ✅ Single fixed quantity
+                        dest.setUnits(src.getQuantity());
+
+                        // ❌ No per-day rules
+                        dest.setDeliveryRules(null);
+                    }
+
+                    // ===== CUSTOM subscription =====
+                    if (src.getPlanType() == PlanType.CUSTUME) {
+
+                        // ❌ No plan info
+                        dest.setPlanId(null);
+                        dest.setPlanTitle(null);
+
+                        // ❌ No single quantity
+                        dest.setUnits(null);
+
+                        // ✅ Per-day delivery rules
+                        if (src.getDeliveryRules() != null) {
+                            dest.setDeliveryRules(
+                                    src.getDeliveryRules().stream()
+                                            .map(rule -> {
+                                                DeliveryRuleResponse r = new DeliveryRuleResponse();
+                                                r.setDayOfWeek(rule.getDayOfWeek());
+                                                r.setUnits(rule.getUnits());
+                                                return r;
+                                            })
+                                            .toList()
+                            );
+                        } else {
+                            dest.setDeliveryRules(List.of());
+                        }
+                    }
+
+                    return dest;
                 });
+
+
+
 
         // ===================== SUBSCRIPTION EVENTS =====================
 

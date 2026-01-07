@@ -61,5 +61,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<SubscriptionPlan> subscriptionPlans;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Subscriptions> subscription;
+
 }
 

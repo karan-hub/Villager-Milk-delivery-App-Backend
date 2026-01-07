@@ -12,6 +12,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,14 +35,18 @@ public class Subscriptions {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_id", nullable = false, columnDefinition = "BINARY(16)")
+    @JoinColumn(name = "plan_id",  columnDefinition = "BINARY(16)")
     private SubscriptionPlan plan;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false , columnDefinition = "BINARY(16)" )
+    private Product product;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PlanType planType;
 
-    @Column(nullable = false)
+
     private Integer quantity;
 
     private LocalDate startDate;
@@ -58,6 +63,14 @@ public class Subscriptions {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(
+            mappedBy = "subscription",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<SubscriptionDeliveryRule> deliveryRules = new ArrayList<>();
+
 }
 
 

@@ -4,7 +4,8 @@ public enum PlanType {
     MONTHLY("monthly"),
     WEEKLY("weely"),
     DAILY("daily"),
-    CUSTUME("custume");
+    CUSTUME("custume"),
+    PREDEFINED("PREDEFINED");
 
     private final String label;
 
