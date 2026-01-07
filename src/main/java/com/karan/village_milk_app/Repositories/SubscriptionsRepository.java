@@ -15,6 +15,7 @@ import java.util.UUID;
 public interface SubscriptionsRepository extends JpaRepository<Subscriptions, UUID> {
     List<Subscriptions> findByUserId(UUID userId);
     List<Subscriptions> findAllByStatus(SubscriptionStatus status);
+    boolean existsByUserIdAndStatus(UUID userId, SubscriptionStatus status);
 
     long countByStatus(SubscriptionStatus status);
     long countByCreatedAtAfter(LocalDateTime dateTime);
