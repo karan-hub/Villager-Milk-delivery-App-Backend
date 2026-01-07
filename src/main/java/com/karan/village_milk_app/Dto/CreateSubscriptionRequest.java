@@ -17,6 +17,9 @@ public class CreateSubscriptionRequest {
     private UUID planId;
 
     @NotNull
+    private UUID productId;
+
+    @NotNull
     private LocalDate startDate;
 
     @NotNull
