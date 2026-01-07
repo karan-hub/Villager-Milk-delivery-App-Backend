@@ -1,6 +1,6 @@
 package com.karan.village_milk_app.Controller;
 
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.Service.AdminSubscriptionService;
 import com.karan.village_milk_app.model.DeliveryDto;
 import com.karan.village_milk_app.model.Type.EventStatus;
@@ -31,7 +31,7 @@ public class AdminSubscriptionController {
      * GET /api/v1/admin/subscriptions?status=CANCELLED
      */
     @GetMapping("/subscriptions")
-    public ResponseEntity<List<SubscriptionDto>> getSubscriptions(
+    public ResponseEntity<List<SubscriptionResponse>> getSubscriptions(
             @RequestParam(required = false)
             SubscriptionStatus status
     ) {

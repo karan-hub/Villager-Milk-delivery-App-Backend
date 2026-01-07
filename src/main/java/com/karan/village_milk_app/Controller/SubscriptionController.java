@@ -1,12 +1,18 @@
 package com.karan.village_milk_app.Controller;
 
 import com.karan.village_milk_app.Dto.CreateSubscriptionRequest;
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Request.CreateCustomSubscriptionRequest;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
+import com.karan.village_milk_app.Security.SecurityUtils;
 import com.karan.village_milk_app.Service.SubscriptionService;
+import io.jsonwebtoken.Jwt;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +27,14 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<SubscriptionDto> create(
+    public ResponseEntity<SubscriptionResponse> create(
             @RequestBody CreateSubscriptionRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(subscriptionService.createSubscription(req));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<SubscriptionDto>> mySubscriptions() {
+    public ResponseEntity<List<SubscriptionResponse>> mySubscriptions() {
         return ResponseEntity.ok(subscriptionService.getMySubscriptions());
     }
 
@@ -54,6 +60,18 @@ public class SubscriptionController {
     public ResponseEntity<Void> cancel(@PathVariable UUID id) {
         subscriptionService.cancelSubscription(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/custom")
+    public ResponseEntity<SubscriptionResponse> createCustomSubscription(
+            @Valid @RequestBody CreateCustomSubscriptionRequest request
+    ) {
+        UUID currentUserId = SecurityUtils.getCurrentUserId();
+
+        SubscriptionResponse response =
+                subscriptionService.createCustomSubscription(request, currentUserId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
 
