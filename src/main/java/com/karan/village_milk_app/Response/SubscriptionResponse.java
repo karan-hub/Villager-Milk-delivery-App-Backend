@@ -7,10 +7,11 @@ import lombok.Data;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
-public class SubscriptionDto {
+public class SubscriptionResponse  {
     private UUID subscriptionId;
     private String planTitle;
     private String productName;
@@ -22,6 +23,7 @@ public class SubscriptionDto {
     private LocalDateTime createdAt;
     private UUID userId;
     private UUID planId;
+    private List<DeliveryRuleResponse> deliveryRules;
 
 }
 
