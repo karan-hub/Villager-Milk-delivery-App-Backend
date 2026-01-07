@@ -1,29 +1,29 @@
 package com.karan.village_milk_app.Service.Impl;
 
 import com.karan.village_milk_app.Dto.CreateSubscriptionRequest;
+import com.karan.village_milk_app.Dto.DeliveryScheduleDto;
 import com.karan.village_milk_app.Exceptions.ResourceNotFoundException;
-import com.karan.village_milk_app.Repositories.SubscriptionEventsRepository;
-import com.karan.village_milk_app.Repositories.SubscriptionPlanRepository;
-import com.karan.village_milk_app.Repositories.SubscriptionsRepository;
-import com.karan.village_milk_app.Repositories.UserRepository;
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Repositories.*;
+import com.karan.village_milk_app.Request.CreateCustomSubscriptionRequest;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.Security.SecurityUtils;
 import com.karan.village_milk_app.Service.SubscriptionService;
-import com.karan.village_milk_app.model.SubscriptionEvents;
-import com.karan.village_milk_app.model.SubscriptionPlan;
-import com.karan.village_milk_app.model.Subscriptions;
+import com.karan.village_milk_app.model.*;
 import com.karan.village_milk_app.model.Type.DeliverySlot;
 import com.karan.village_milk_app.model.Type.EventStatus;
+import com.karan.village_milk_app.model.Type.PlanType;
 import com.karan.village_milk_app.model.Type.SubscriptionStatus;
-import com.karan.village_milk_app.model.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +33,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionsRepository subscriptionRepo;
     private final SubscriptionEventsRepository eventRepo;
     private final SubscriptionPlanRepository planRepo;
+    private  final ProductRepository  productRepository;
     private final UserRepository userRepo;
     private final ModelMapper modelMapper;
+    private  final  SubscriptionDeliveryRuleRepo  deliveryRuleRepo;
 
     /* ================= CREATE SUBSCRIPTION ================= */
 
     @Override
     @Transactional
-    public SubscriptionDto createSubscription(CreateSubscriptionRequest req) {
+    public SubscriptionResponse createSubscription(CreateSubscriptionRequest req) {
 
         UUID userId = SecurityUtils.getCurrentUserId();
 
@@ -50,9 +52,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionPlan plan = planRepo.findById(req.getPlanId())
                 .orElseThrow(() -> new ResourceNotFoundException("Plan not found"));
 
+        Product product = productRepository.findById(req.getProductId()).orElseThrow(
+                () -> new ResourceNotFoundException("Product not found")
+        );
+
         Subscriptions sub = new Subscriptions();
         sub.setUser(user);
         sub.setPlan(plan);
+        sub.setProduct(product);
         sub.setStartDate(req.getStartDate());
         sub.setEndDate(req.getStartDate().plusDays(plan.getDurationDays()));
         sub.setStatus(SubscriptionStatus.ACTIVE);
@@ -60,24 +67,26 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setQuantity(req.getQuantity());
         sub.setPlanType(req.getPlanType());
 
+
+        validateSubscriptionType(sub);
         Subscriptions saved = subscriptionRepo.save(sub);
 
         generateSubscriptionEvents(saved, req.getDeliverySlot());
 
-        return modelMapper.map(saved, SubscriptionDto.class);
+        return modelMapper.map(saved, SubscriptionResponse.class);
     }
 
     /* ================= GET MY SUBSCRIPTIONS ================= */
 
     @Override
     @Transactional(readOnly = true)
-    public List<SubscriptionDto> getMySubscriptions() {
+    public List<SubscriptionResponse> getMySubscriptions() {
 
         UUID userId = SecurityUtils.getCurrentUserId();
 
         return subscriptionRepo.findByUserId(userId)
                 .stream()
-                .map(s -> modelMapper.map(s, SubscriptionDto.class))
+                .map(s -> modelMapper.map(s, SubscriptionResponse.class))
                 .toList();
     }
 
@@ -173,10 +182,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<SubscriptionDto> getAllSubscriptions() {
+    public List<SubscriptionResponse> getAllSubscriptions() {
         return subscriptionRepo.findAll()
                 .stream()
-                .map(s -> modelMapper.map(s, SubscriptionDto.class))
+                .map(s -> modelMapper.map(s, SubscriptionResponse.class))
                 .toList();
     }
 
@@ -194,7 +203,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             event.setSubscription(sub);
             event.setDeliveryDate(date);
             event.setDeliverySlot(slot);
-            event.setDeliveredQuantity(sub.getPlan().getUnits());
+            if (sub.getPlanType() == PlanType.PREDEFINED) {
+                event.setDeliveredQuantity(sub.getPlan().getUnits());
+            } else {
+                event.setDeliveredQuantity(sub.getQuantity());
+            }
             event.setStatus(EventStatus.SCHEDULED);
 
             eventRepo.save(event);
@@ -202,4 +215,106 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             date = date.plusDays(1);
         }
     }
+
+    @Transactional
+    public SubscriptionResponse createCustomSubscription(
+            CreateCustomSubscriptionRequest req,
+            UUID userId
+    ) {
+        if (req.getDeliverySchedule().isEmpty()) {
+            throw new IllegalArgumentException("Delivery schedule cannot be empty");
+        }
+
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Product product = productRepository.findById(req.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        Subscriptions sub = new Subscriptions();
+        sub.setUser(user);
+        sub.setProduct(product);
+        sub.setPlan(null);
+        sub.setPlanType(PlanType.CUSTUME);
+        sub.setQuantity(null);
+        sub.setStartDate(req.getStartDate());
+        sub.setEndDate(req.getEndDate());
+        sub.setDeliverySlot(req.getDeliverySlot());
+        sub.setStatus(SubscriptionStatus.ACTIVE);
+
+        validateSubscriptionType(sub);
+
+        Subscriptions saved = subscriptionRepo.save(sub);
+
+        // 🔹 Persist delivery rules
+        for (DeliveryScheduleDto dto : req.getDeliverySchedule()) {
+
+            SubscriptionDeliveryRule rule = new SubscriptionDeliveryRule();
+            rule.setSubscription(saved);
+            rule.setDayOfWeek(DayOfWeek.of(
+                    dto.getDayOfWeek() == 0 ? 7 : dto.getDayOfWeek()
+            ));
+            rule.setUnits(dto.getUnits());
+
+            deliveryRuleRepo.save(rule);
+        }
+
+        generateSubscriptionEventsFromRules(saved);
+
+        return modelMapper.map(saved ,SubscriptionResponse.class);
+    }
+
+    private void generateSubscriptionEventsFromRules(Subscriptions sub) {
+
+
+        Map<DayOfWeek, Integer> ruleMap =
+                sub.getDeliveryRules()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                SubscriptionDeliveryRule::getDayOfWeek,
+                                SubscriptionDeliveryRule::getUnits
+                        ));
+
+        LocalDate date = sub.getStartDate();
+
+        while (!date.isAfter(sub.getEndDate())) {
+
+            DayOfWeek dow = date.getDayOfWeek();
+
+            Integer units = ruleMap.get(dow);
+            if (units != null && units > 0) {
+
+                SubscriptionEvents event = new SubscriptionEvents();
+                event.setSubscription(sub);
+                event.setDeliveryDate(date);
+                event.setDeliverySlot(sub.getDeliverySlot());
+                event.setDeliveredQuantity(units);
+                event.setStatus(EventStatus.SCHEDULED);
+
+                eventRepo.save(event);
+            }
+
+            date = date.plusDays(1);
+        }
+    }
+
+
+    private void validateSubscriptionType(Subscriptions sub) {
+
+        if (sub.getPlanType() == PlanType.CUSTUME) {
+            if (sub.getPlan() != null) {
+                throw new IllegalStateException("CUSTOM subscription must not have a plan");
+            }
+        }
+
+
+        if (sub.getPlanType() == PlanType.PREDEFINED && sub.getPlan() == null) {
+            throw new IllegalStateException("PLAN subscription must have a plan");
+        }
+
+
+
+    }
+
 }
