@@ -4,9 +4,10 @@ import com.karan.village_milk_app.Dto.ProductDto;
 import com.karan.village_milk_app.Dto.SubscriptionEventDto;
 import com.karan.village_milk_app.Exceptions.ResourceNotFoundException;
 import com.karan.village_milk_app.Repositories.SubscriptionEventsRepository;
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.Service.AdminService;
 import com.karan.village_milk_app.Service.ProductService;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,14 +44,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ProductDto updateProduct(UUID productId, ProductDto dto) {
+    public ProductDto updateProduct(UUID productId, ProductDto dto) throws BadRequestException {
         ProductDto updated = productService.updateProduct(productId.toString(), dto);
         log.info("Product updated with id={}", productId);
         return updated;
     }
 
     @Override
-    public void deleteProduct(UUID productId) {
+    public void deleteProduct(UUID productId) throws BadRequestException {
         productService.deleteProduct(productId.toString());
         log.warn("Product deleted with id={}", productId);
     }
@@ -96,7 +97,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<SubscriptionDto> getAllSubscriptions() {
+    public List<SubscriptionResponse> getAllSubscriptions() {
         // Implement as needed, perhaps return empty list or fetch from repository
         return List.of();
     }

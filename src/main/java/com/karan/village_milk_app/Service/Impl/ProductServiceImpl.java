@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductDto updateProduct(String id, ProductDto dto) {
+    public ProductDto updateProduct(String id, ProductDto dto) throws BadRequestException {
         UUID productId = UserHelper.parseUUID(id);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -62,16 +63,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(String id) {
+    public void deleteProduct(String id) throws BadRequestException {
         UUID productId = UserHelper.parseUUID(id);
         productRepository.deleteById(productId);
     }
 
     @Override
     public ProductDto getProductById(String id) {
-        UUID productId = UserHelper.parseUUID(id);
+        UUID productId;
+
+        try {
+            productId = UUID.fromString(id);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException("Invalid product ID");
+        }
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+
         return modelMapper.map(product, ProductDto.class);
     }
 }

@@ -10,6 +10,7 @@ import com.karan.village_milk_app.model.Type.Role;
 import com.karan.village_milk_app.model.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO dto, String id) {
+    public UserDTO updateUser(UserDTO dto, String id) throws BadRequestException {
         UUID uuid = UserHelper.parseUUID(id);
         User existingUser = userRepository.findById(uuid).orElseThrow(()-> new ResourceNotFoundException("NO USER FOUND FOR THIS Number"));
 
@@ -107,14 +108,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(String userId) throws BadRequestException {
         UUID uuid = UserHelper.parseUUID(userId);
         User  user = userRepository.findById(uuid).orElseThrow(()-> new ResourceNotFoundException("NO USER FOUND FOR THIS NUMBER"));
         userRepository.delete(user);
     }
 
     @Override
-    public UserDTO getUserById(String userId) {
+    public UserDTO getUserById(String userId) throws BadRequestException {
         UUID uuid = UserHelper.parseUUID(userId);
         User  user = userRepository.findById(uuid).orElseThrow(()-> new ResourceNotFoundException("NO USER FOUND FOR THIS MAIL"));
 
@@ -156,7 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void makeAdmin(String userId) {
+    public void makeAdmin(String userId) throws BadRequestException {
         UUID uuid = UserHelper.parseUUID(userId);
         User user = userRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.getRole() == Role.ROLE_ADMIN) {
