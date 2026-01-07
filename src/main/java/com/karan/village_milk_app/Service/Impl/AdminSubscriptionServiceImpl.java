@@ -2,7 +2,7 @@ package com.karan.village_milk_app.Service.Impl;
 
 import com.karan.village_milk_app.Repositories.SubscriptionEventsRepository;
 import com.karan.village_milk_app.Repositories.SubscriptionsRepository;
-import com.karan.village_milk_app.Response.SubscriptionDto;
+import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.Service.AdminSubscriptionService;
 import com.karan.village_milk_app.model.*;
 import com.karan.village_milk_app.model.Type.EventStatus;
@@ -31,7 +31,7 @@ public class AdminSubscriptionServiceImpl
 
 
     @Override
-    public List<SubscriptionDto> getSubscriptions(
+    public List<SubscriptionResponse> getSubscriptions(
             SubscriptionStatus status
     ) {
 
@@ -72,9 +72,9 @@ public class AdminSubscriptionServiceImpl
 
     /* ================= SAFE MAPPERS ================= */
 
-    private SubscriptionDto toDto(Subscriptions s) {
+    private SubscriptionResponse toDto(Subscriptions s) {
 
-        SubscriptionDto dto = new SubscriptionDto();
+        SubscriptionResponse dto = new SubscriptionResponse();
 
         // Subscription basic info
         dto.setSubscriptionId(s.getId());
