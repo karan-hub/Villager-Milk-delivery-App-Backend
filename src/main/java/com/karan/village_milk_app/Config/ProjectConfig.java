@@ -1,13 +1,11 @@
 package com.karan.village_milk_app.Config;
 
-import com.karan.village_milk_app.Dto.ProductDto;
-import com.karan.village_milk_app.Dto.SubscriptionEventDto;
-import com.karan.village_milk_app.Dto.SubscriptionPlanDto;
-import com.karan.village_milk_app.Dto.UserDTO;
+import com.karan.village_milk_app.Dto.*;
 import com.karan.village_milk_app.Response.DeliveryRuleResponse;
 import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.healpers.OtpGenerator;
 import com.karan.village_milk_app.model.*;
+import com.karan.village_milk_app.model.OrderDto;
 import com.karan.village_milk_app.model.Type.PlanType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -144,18 +142,15 @@ public class ProjectConfig {
                 });
 
         // ===================== ORDERS =====================
+        mapper.typeMap(Orders.class, OrderDto.class)
+                .addMapping(Orders::getId, OrderDto::setOrderId);
 
         mapper.typeMap(OrderItem.class, OrderItemDto.class)
-                .addMappings(m -> {
-                    m.map(src -> src.getProduct().getId(),
-                            OrderItemDto::setProductId);
-                });
+                .addMappings(m ->
+                        m.map(src -> src.getProduct().getName(),
+                                OrderItemDto::setProductName)
+                );
 
-        mapper.typeMap(Orders.class, OrderDto.class)
-                .addMappings(m -> {
-                    m.map(Orders::getId,
-                            OrderDto::setOrderId);
-                });
 
         return mapper;
     }
