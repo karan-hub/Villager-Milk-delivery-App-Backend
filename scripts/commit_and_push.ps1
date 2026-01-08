@@ -1,74 +1,193 @@
-# =========================================
-# Admin Analytics & Subscription Commits
-# =========================================
+# ================================
+# CONFIG
+# ================================
+$branch = "main"
+$remote = "origin"
 
-Write-Host "Starting commit & push process..." -ForegroundColor Green
-Set-Location (git rev-parse --show-toplevel)
+# Start date (edit if needed)
+$baseDate = Get-Date "2025-12-20 10:00:00"
 
-Write-Host "Starting commit & push process..." -ForegroundColor Green
+function Commit-With-Date($message, $daysOffset) {
+    $commitDate = $baseDate.AddDays($daysOffset).ToString("yyyy-MM-dd HH:mm:ss")
+    git commit -m "$message" --date="$commitDate"
+}
 
+# ================================
+# COMMIT 1 – Address Entity + Repo
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/model/Address.java `
+src/main/java/com/karan/village_milk_app/Repositories/AddressRepository.java
+
+Commit-With-Date "fix(address): correct user relation and repository design" 0
+
+# ================================
+# COMMIT 2 – Address DTOs
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Request/AddressRequest.java `
+src/main/java/com/karan/village_milk_app/Response/AddressResponse.java `
+src/main/java/com/karan/village_milk_app/Dto/AddressDTO.java
+
+Commit-With-Date "feat(address): add request and response DTOs" 1
+
+# ================================
+# COMMIT 3 – Address Service Interface
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/AddressService.java
+
+Commit-With-Date "feat(address): define address service contract" 2
+
+# ================================
+# COMMIT 4 – Address Service Impl
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/Impl/AddressServiceImpl.java
+
+Commit-With-Date "feat(address): implement address service with ownership checks" 3
+
+# ================================
+# COMMIT 5 – Address Controller
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Controller/AddressController.java
+
+Commit-With-Date "feat(address): expose REST APIs for address management" 4
+
+# ================================
+# COMMIT 6 – Payment DTOs
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Request/InitiatePaymentRequest.java `
+src/main/java/com/karan/village_milk_app/Request/ConfirmPaymentRequest.java `
+src/main/java/com/karan/village_milk_app/Response/PaymentResponse.java
+
+Commit-With-Date "feat(payment): add payment request and response models" 5
+
+# ================================
+# COMMIT 7 – Payment Service Interface
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/PaymentService.java
+
+Commit-With-Date "feat(payment): define payment service contract" 6
+
+# ================================
+# COMMIT 8 – Payment Service Impl
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/Impl/PaymentServiceImpl.java
+
+Commit-With-Date "feat(payment): implement payment workflow" 7
+
+# ================================
+# COMMIT 9 – Payment Controller
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Controller/PaymentController.java
+
+Commit-With-Date "feat(payment): add payment REST controller" 8
+
+# ================================
+# COMMIT 10 – Exception Classes
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Exceptions/BadRequestException.java `
+src/main/java/com/karan/village_milk_app/Exceptions/UnauthorizedException.java `
+src/main/java/com/karan/village_milk_app/Exceptions/ResourceNotFoundException.java
+
+Commit-With-Date "feat(exception): add custom domain exceptions" 9
+
+# ================================
+# COMMIT 11 – Global Exception Handler
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Exceptions/GlobalExceptionHandler.java
+
+Commit-With-Date "feat(exception): centralize API error handling" 10
+
+# ================================
+# COMMIT 12 – User Helper
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/healpers/UserHelper.java
+
+Commit-With-Date "refactor(auth): harden current user resolution logic" 11
+
+# ================================
+# COMMIT 13 – Security Filter
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Security/JwtAuthenticationFilter.java
+
+Commit-With-Date "feat(security): improve JWT authentication filter" 12
+
+# ================================
+# COMMIT 14 – Security Config
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Config/SecurityConfig.java `
+src/main/java/com/karan/village_milk_app/Config/SecurityEndpoints.java
+
+Commit-With-Date "config(security): update endpoint authorization rules" 13
+
+# ================================
+# COMMIT 15 – Admin Controllers
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Controller/AdminController.java `
+src/main/java/com/karan/village_milk_app/Controller/AdminProductController.java
+
+Commit-With-Date "feat(admin): enhance admin management endpoints" 14
+
+# ================================
+# COMMIT 16 – Subscription Plan Fixes
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Controller/SubscriptionPlanController.java `
+src/main/java/com/karan/village_milk_app/Repositories/SubscriptionPlanRepository.java `
+src/main/java/com/karan/village_milk_app/Service/Impl/SubscriptionPlanServiceImpl.java
+
+Commit-With-Date "fix(subscription): correct plan retrieval and service logic" 15
+
+# ================================
+# COMMIT 17 – User Service
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/Impl/UserServiceImpl.java `
+src/main/java/com/karan/village_milk_app/Service/UserService.java `
+src/main/java/com/karan/village_milk_app/Controller/UserController.java
+
+Commit-With-Date "feat(user): improve user service and controller flows" 16
+
+# ================================
+# COMMIT 18 – Product Service
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Service/ProductService.java `
+src/main/java/com/karan/village_milk_app/Service/Impl/ProductServiceImpl.java `
+src/main/java/com/karan/village_milk_app/Controller/productController.java
+
+Commit-With-Date "feat(product): stabilize product CRUD operations" 17
+
+# ================================
+# COMMIT 19 – Config Files
+# ================================
+git add `
+src/main/java/com/karan/village_milk_app/Config/ProjectConfig.java `
+src/main/resources/application-dev.yml
+
+Commit-With-Date "config(app): update application and environment settings" 18
+
+# ================================
+# COMMIT 20 – Final Cleanup
+# ================================
 git add .
-git commit -m "Fix time-type mismatch between LocalDateTime and Instant in analytics
 
-Resolved runtime errors caused by mixing LocalDateTime and Instant in repository
-queries and service logic. Standardized timestamp-based analytics to use Instant
-consistently, preventing InvalidDataAccessApiUsageException.
+Commit-With-Date "chore: final cleanup and consistency fixes" 19
 
-Future improvement: Define and document clear time-handling guidelines
-to avoid temporal type mismatches across layers."
-
-Write-Host "Commit 1 completed" -ForegroundColor Green
-
-# Commit 2
-git add .
-git commit -m "Align SubscriptionEvents queries with LocalDate deliveryDate
-
-Corrected delivery analytics by using LocalDate for deliveryDate as per domain
-design. Removed incorrect Instant-based comparisons and fixed service logic
-to reflect day-level delivery semantics.
-
-Future improvement: Add shared utility methods for Instant to LocalDate
-conversion at service boundaries."
-
-Write-Host "Commit 2 completed" -ForegroundColor Green
-
-# Commit 3
-git add .
-git commit -m "Fix Spring Data repository method names for entity relationships
-
-Updated repository method naming to correctly reference nested entity
-properties (e.g., subscription.id, user.id). This prevents query resolution
-failures caused by non-existent direct ID fields.
-
-Future improvement: Add repository-level tests to validate Spring Data
-query method parsing during CI."
-
-Write-Host "Commit 3 completed" -ForegroundColor Green
-
-# Commit 4
-git add .
-git commit -m "Correct OrderRepository to use Instant-based createdAt analytics
-
-Aligned OrderRepository analytics methods with Instant-based createdAt field
-in Orders entity. Replaced incorrect LocalDateTime parameters with Instant
-and fixed aggregation queries accordingly.
-
-Future improvement: Add database indexes on created_at for improved
-analytics performance."
-
-Write-Host "Commit 4 completed" -ForegroundColor Green
-
-# Commit 5
-git add .
-git commit -m "Stabilize admin dashboard analytics with consistent date handling
-
-Finalized dashboard analytics by consistently using Instant for revenue and
-user metrics, and LocalDate for delivery metrics. Fixed incorrect 'today'
-calculations caused by mixing date and time logic.
-
-Future improvement: Refactor dashboard analytics into smaller components
-and add unit tests for timezone and boundary cases."
-
-Write-Host "Commit 5 completed" -ForegroundColor Green
-
-Write-Host "All commits created successfully." -ForegroundColor Cyan
+# ================================
+# PUSH
+# ================================
+git push $remote $branch
