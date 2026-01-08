@@ -2,7 +2,6 @@ package com.karan.village_milk_app.healpers;
 
 import com.karan.village_milk_app.Dto.OrderDto;
 import com.karan.village_milk_app.model.OrderItem;
-import com.karan.village_milk_app.model.OrderItemDto;
 import com.karan.village_milk_app.model.Orders;
 import org.springframework.web.bind.annotation.Mapping;
 

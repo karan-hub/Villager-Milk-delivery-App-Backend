@@ -14,11 +14,10 @@ import java.util.UUID;
 @Data
 public class OrderDto {
     private UUID orderId;
-    private UUID userId;
     private List<OrderItemDto> orderItems = new ArrayList<>();
     private BigDecimal totalAmount;
     private LocalDateTime deliveryDate;
     private DeliverySlot deliverySlot;
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus status ;
     private Instant createdAt;
 }

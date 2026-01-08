@@ -1,9 +1,11 @@
 package com.karan.village_milk_app.Service.Impl;
 
 import com.karan.village_milk_app.Dto.OrderDto;
+import com.karan.village_milk_app.Dto.OrderItemDto;
 import com.karan.village_milk_app.Exceptions.ResourceNotFoundException;
 import com.karan.village_milk_app.Repositories.OrderRepository;
 import com.karan.village_milk_app.Repositories.ProductRepository;
+import com.karan.village_milk_app.Repositories.UserRepository;
 import com.karan.village_milk_app.Request.CreateOrderItemRequest;
 import com.karan.village_milk_app.Request.CreateOrderRequest;
 import com.karan.village_milk_app.Security.SecurityUtils;
@@ -31,18 +33,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository ordersRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
+    @Transactional
     @Override
+
     public OrderDto placeOrder(CreateOrderRequest request) {
 
-        // 🔐 User from JWT (BEST PRACTICE)
         UUID userId = SecurityUtils.getCurrentUserId();
-        User user = new User();
-        user.setId(userId);
-
-        if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new IllegalArgumentException("Order items are required");
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
         Orders order = new Orders();
         order.setUser(user);
@@ -53,10 +53,6 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (CreateOrderItemRequest itemReq : request.getItems()) {
-
-            if (itemReq.getQuantity() == null || itemReq.getQuantity() <= 0) {
-                throw new IllegalArgumentException("Quantity must be positive");
-            }
 
             Product product = productRepository.findById(itemReq.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -78,9 +74,20 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalAmount(totalAmount);
 
-        Orders saved = ordersRepository.save(order);
-        return modelMapper.map(saved, OrderDto.class);
+        Orders saved = ordersRepository.saveAndFlush(order);
+        Orders persisted = ordersRepository.findById(saved.getId()).orElseThrow();
+
+        OrderDto mapped = modelMapper.map(persisted, OrderDto.class);
+        mapped.setOrderItems(
+                persisted.getOrderItems().stream()
+                        .map(item -> modelMapper.map(item, OrderItemDto.class))
+                        .toList()
+        );
+        mapped.setOrderId(persisted.getId());
+
+        return  mapped;
     }
+
 
     @Override
     @Transactional(readOnly = true)

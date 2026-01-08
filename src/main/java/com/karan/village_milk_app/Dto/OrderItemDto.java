@@ -7,14 +7,10 @@ import java.util.UUID;
 
 @Data
 public class OrderItemDto {
-
-    private UUID orderItemId;
-    private UUID productId;
     private String productName;
     private Long quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
-    private Instant createdAt;
 }
 
 

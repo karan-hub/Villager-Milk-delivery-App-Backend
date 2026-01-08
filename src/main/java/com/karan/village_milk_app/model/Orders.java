@@ -31,7 +31,7 @@ public class Orders {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", columnDefinition = "BINARY(16)")
+    @JoinColumn(name = "user_id", columnDefinition = "BINARY(16)" )
     private User user;
 
     @OneToMany(
@@ -57,6 +57,7 @@ public class Orders {
 
     @Column(name = "subscription_event_id", unique = true)
     private UUID subscriptionEventId;
+
 
 }
 

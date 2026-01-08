@@ -46,7 +46,5 @@ public class ProductDto {
 
     private Map<String, String> nutrition;
 
-    public UUID getId() {
-        return id;
-    }
+
 }

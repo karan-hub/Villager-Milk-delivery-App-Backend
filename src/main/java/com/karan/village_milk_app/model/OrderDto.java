@@ -1,5 +1,6 @@
 package com.karan.village_milk_app.model;
 
+import com.karan.village_milk_app.Dto.OrderItemDto;
 import com.karan.village_milk_app.model.Type.DeliverySlot;
 import com.karan.village_milk_app.model.Type.OrderStatus;
 import lombok.Data;

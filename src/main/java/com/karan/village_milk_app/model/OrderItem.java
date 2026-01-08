@@ -37,12 +37,7 @@ public class OrderItem {
     private BigDecimal totalPrice;
 
     @CreatedDate
-    private Instant createdAt;
+    private Instant createdAt= Instant.now();
 
-
-
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
-    }
 }
 
