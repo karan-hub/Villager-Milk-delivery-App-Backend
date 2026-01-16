@@ -8,6 +8,7 @@ import com.karan.village_milk_app.Request.CreateCustomSubscriptionRequest;
 import com.karan.village_milk_app.Response.SubscriptionResponse;
 import com.karan.village_milk_app.Security.SecurityUtils;
 import com.karan.village_milk_app.Service.SubscriptionService;
+import com.karan.village_milk_app.healpers.SubscriptionEventHelper;
 import com.karan.village_milk_app.model.*;
 import com.karan.village_milk_app.model.Type.DeliverySlot;
 import com.karan.village_milk_app.model.Type.EventStatus;
@@ -37,6 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final UserRepository userRepo;
     private final ModelMapper modelMapper;
     private  final  SubscriptionDeliveryRuleRepo  deliveryRuleRepo;
+    private  final SubscriptionEventHelper subHelper;
 
     /* ================= CREATE SUBSCRIPTION ================= */
 
@@ -62,16 +64,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setProduct(product);
         sub.setStartDate(req.getStartDate());
         sub.setEndDate(req.getStartDate().plusDays(plan.getDurationDays()));
-        sub.setStatus(SubscriptionStatus.ACTIVE);
+        sub.setStatus(SubscriptionStatus.PENDING_PAYMENT);
         sub.setDeliverySlot(req.getDeliverySlot());
         sub.setQuantity(req.getQuantity());
         sub.setPlanType(req.getPlanType());
 
 
-        validateSubscriptionType(sub);
+        subHelper.validateSubscriptionType(sub);
         Subscriptions saved = subscriptionRepo.save(sub);
 
-        generateSubscriptionEvents(saved, req.getDeliverySlot());
+//        generateSubscriptionEvents(saved, req.getDeliverySlot());
 
         return modelMapper.map(saved, SubscriptionResponse.class);
     }
@@ -189,33 +191,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .toList();
     }
 
-    /* ================= HELPER ================= */
-
-    private void generateSubscriptionEvents(
-            Subscriptions sub,
-            DeliverySlot slot
-    ) {
-        LocalDate date = sub.getStartDate();
-
-        while (!date.isAfter(sub.getEndDate())) {
-
-            SubscriptionEvents event = new SubscriptionEvents();
-            event.setSubscription(sub);
-            event.setDeliveryDate(date);
-            event.setDeliverySlot(slot);
-            if (sub.getPlanType() == PlanType.PREDEFINED) {
-                event.setDeliveredQuantity(sub.getPlan().getUnits());
-            } else {
-                event.setDeliveredQuantity(sub.getQuantity());
-            }
-            event.setStatus(EventStatus.SCHEDULED);
-
-            eventRepo.save(event);
-
-            date = date.plusDays(1);
-        }
-    }
-
     @Transactional
     public SubscriptionResponse createCustomSubscription(
             CreateCustomSubscriptionRequest req,
@@ -241,9 +216,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         sub.setStartDate(req.getStartDate());
         sub.setEndDate(req.getEndDate());
         sub.setDeliverySlot(req.getDeliverySlot());
-        sub.setStatus(SubscriptionStatus.ACTIVE);
+        sub.setStatus(SubscriptionStatus.PENDING_PAYMENT);
 
-        validateSubscriptionType(sub);
+        subHelper.validateSubscriptionType(sub);
 
         Subscriptions saved = subscriptionRepo.save(sub);
 
@@ -260,61 +235,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             deliveryRuleRepo.save(rule);
         }
 
-        generateSubscriptionEventsFromRules(saved);
+//        generateSubscriptionEventsFromRules(saved);
 
         return modelMapper.map(saved ,SubscriptionResponse.class);
-    }
-
-    private void generateSubscriptionEventsFromRules(Subscriptions sub) {
-
-
-        Map<DayOfWeek, Integer> ruleMap =
-                sub.getDeliveryRules()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                SubscriptionDeliveryRule::getDayOfWeek,
-                                SubscriptionDeliveryRule::getUnits
-                        ));
-
-        LocalDate date = sub.getStartDate();
-
-        while (!date.isAfter(sub.getEndDate())) {
-
-            DayOfWeek dow = date.getDayOfWeek();
-
-            Integer units = ruleMap.get(dow);
-            if (units != null && units > 0) {
-
-                SubscriptionEvents event = new SubscriptionEvents();
-                event.setSubscription(sub);
-                event.setDeliveryDate(date);
-                event.setDeliverySlot(sub.getDeliverySlot());
-                event.setDeliveredQuantity(units);
-                event.setStatus(EventStatus.SCHEDULED);
-
-                eventRepo.save(event);
-            }
-
-            date = date.plusDays(1);
-        }
-    }
-
-
-    private void validateSubscriptionType(Subscriptions sub) {
-
-        if (sub.getPlanType() == PlanType.CUSTUME) {
-            if (sub.getPlan() != null) {
-                throw new IllegalStateException("CUSTOM subscription must not have a plan");
-            }
-        }
-
-
-        if (sub.getPlanType() == PlanType.PREDEFINED && sub.getPlan() == null) {
-            throw new IllegalStateException("PLAN subscription must have a plan");
-        }
-
-
-
     }
 
 }
