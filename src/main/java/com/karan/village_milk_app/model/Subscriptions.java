@@ -38,8 +38,8 @@ public class Subscriptions {
     @JoinColumn(name = "plan_id",  columnDefinition = "BINARY(16)")
     private SubscriptionPlan plan;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false , columnDefinition = "BINARY(16)" )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false )
+    @JoinColumn(name = "product_id", nullable = false , columnDefinition = "BINARY(16)"  )
     private Product product;
 
     @Enumerated(EnumType.STRING)
@@ -70,6 +70,20 @@ public class Subscriptions {
             orphanRemoval = true
     )
     private List<SubscriptionDeliveryRule> deliveryRules = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "subscription",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private  List<SubscriptionEvents> subscriptionEvents = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "subscription",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Payments> payments = new ArrayList<>();
 
 }
 

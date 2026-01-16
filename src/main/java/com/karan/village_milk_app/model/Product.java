@@ -5,6 +5,7 @@ import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -58,11 +59,18 @@ public class Product {
     @Column(name = "value")
     private Map<String, String> nutrition;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<SubscriptionPlan> subscriptionPlans;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Subscriptions> subscription;
+
+@OneToMany(
+        orphanRemoval = true,
+        mappedBy = "product",
+        cascade = CascadeType.ALL
+)
+private List<OrderItem> orderItems = new ArrayList<>();
 
 }
 
