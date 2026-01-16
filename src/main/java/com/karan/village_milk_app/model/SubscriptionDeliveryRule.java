@@ -26,7 +26,7 @@ public class SubscriptionDeliveryRule {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DayOfWeek dayOfWeek; // MONDAY .. SUNDAY
+    private DayOfWeek dayOfWeek;  // days
 
     @Column(nullable = false)
     private Integer units;
