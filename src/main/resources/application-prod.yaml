@@ -1,2 +1,6 @@
 server:
   port: 8084
+
+cashfree:
+  app-id: ${CASHFREE_APP_ID}
+  secret-key: ${CASHFREE_SECRET_KEY}
