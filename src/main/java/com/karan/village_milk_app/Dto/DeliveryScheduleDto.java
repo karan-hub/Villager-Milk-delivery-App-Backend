@@ -8,7 +8,7 @@ import lombok.Data;
 public class DeliveryScheduleDto {
 
     @Min(0) @Max(6)
-    private int dayOfWeek; // 0 = Sunday
+    private int dayOfWeek;
 
     @Min(1)
     private int units;
