@@ -16,9 +16,6 @@ public class CreateCustomSubscriptionRequest {
 
     @NotNull
     private UUID productId;
-
-
-
     @NotNull
     private LocalDate startDate;
 
