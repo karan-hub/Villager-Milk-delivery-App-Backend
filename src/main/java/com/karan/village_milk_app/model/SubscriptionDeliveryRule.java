@@ -34,5 +34,4 @@ public class SubscriptionDeliveryRule {
     @CreatedDate
     private Instant createdAt= Instant.now();
 
-
 }
