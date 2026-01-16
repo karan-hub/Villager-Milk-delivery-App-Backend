@@ -25,7 +25,7 @@ public class SubscriptionEvents {
     @Column(name = "event_id", columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false )
     @JoinColumn(name = "subscription_id", columnDefinition = "BINARY(16)", nullable = false)
     private Subscriptions subscription;
 
@@ -45,6 +45,5 @@ public class SubscriptionEvents {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
-
 
 }

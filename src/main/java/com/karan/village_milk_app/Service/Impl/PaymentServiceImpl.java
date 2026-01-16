@@ -1,60 +1,190 @@
 package com.karan.village_milk_app.Service.Impl;
 
+import com.karan.village_milk_app.Payments.CashfreeClient;
+import com.karan.village_milk_app.Repositories.OrderRepository;
 import com.karan.village_milk_app.Repositories.PaymentsRepository;
+import com.karan.village_milk_app.Repositories.SubscriptionEventsRepository;
 import com.karan.village_milk_app.Repositories.SubscriptionsRepository;
 import com.karan.village_milk_app.Request.InitiatePaymentRequest;
+import com.karan.village_milk_app.Response.CashfreeOrderResponse;
+import com.karan.village_milk_app.Response.CashfreeVerifyResponse;
 import com.karan.village_milk_app.Response.PaymentResponse;
 import com.karan.village_milk_app.Service.PaymentService;
+import com.karan.village_milk_app.healpers.SubscriptionEventHelper;
+import com.karan.village_milk_app.model.Orders;
 import com.karan.village_milk_app.model.Payments;
 import com.karan.village_milk_app.model.Subscriptions;
-import com.karan.village_milk_app.model.Type.PaymentStatus;
-import com.karan.village_milk_app.model.Type.SubscriptionStatus;
+import com.karan.village_milk_app.model.Type.*;
 import com.karan.village_milk_app.model.User;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentsRepository paymentRepository;
-    private final SubscriptionsRepository subscriptionRepository;
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
+    private final PaymentsRepository paymentRepo;
+    private final OrderRepository orderRepo;
+    private final SubscriptionsRepository subRepo;
+    private final CashfreeClient cashfreeClient;
+    private  final SubscriptionEventHelper subHelper;
+    private  final SubscriptionEventsRepository eventRepo ;
+
 
     @Override
-    public PaymentResponse initiatePayment(
+    @Transactional
+    public PaymentResponse initiate(
             User user,
             InitiatePaymentRequest request
     ) {
-        Subscriptions subscription = subscriptionRepository
-                .findById(request.subscriptionId())
-                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+
+        Orders order = null;
+        Subscriptions subscription = null;
+
+        // Validate amount
+        if (request.amount() == null || request.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Payment amount must be greater than zero");
+        }
+
+
+        // Link payment to order or subscription with ownership validation
+        if (request.orderType() == OrderType.BUY_ONCE) {
+            order = orderRepo.findById(request.orderTypeId())
+                    .orElseThrow();
+            validateOwnership(order.getUser(), user);
+            ;
+        } else {
+            subscription = subRepo.findById(request.orderTypeId())
+                    .orElseThrow();
+            validateOwnership(subscription.getUser(), user);
+        }
 
         Payments payment = new Payments();
         payment.setUser(user);
+        payment.setOrder(order);
         payment.setSubscription(subscription);
         payment.setAmount(request.amount());
         payment.setPaymentMethod(request.paymentMethod());
         payment.setPaymentStatus(PaymentStatus.PENDING);
 
-        Payments saved = paymentRepository.save(payment);
+        String gatewayOrderId = "order_" + UUID.randomUUID();
+        payment.setMyOrderId(gatewayOrderId);
+
+
+        paymentRepo.save(payment);
+        CashfreeOrderResponse cf = cashfreeClient.cashfreeCreateOrder(
+                gatewayOrderId,
+                request.amount(),
+                user
+        );
+
 
         return new PaymentResponse(
-                saved.getId(),
-                saved.getPaymentStatus()
+                payment.getId(),
+                cf.paymentSessionId(),
+                payment.getMyOrderId()
         );
+
     }
+
+
 
     @Override
-    public void confirmPayment(UUID paymentId) {
-        Payments payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+    public PaymentStatus verify(UUID paymentId) {
+        Payments payment = paymentRepo.findById(paymentId).orElseThrow();
+        String gatewayOrderId =
+                paymentRepo.findGatewayOrderId(paymentId);
 
-        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+        CashfreeVerifyResponse cf =
+                cashfreeClient.verifyOrder(gatewayOrderId);
 
-        Subscriptions subscription = payment.getSubscription();
-        if (subscription != null) {
-            subscription.setStatus(SubscriptionStatus.ACTIVE);
+        updatePaymentStatus(paymentId, cf);
+        return paymentRepo.findById(paymentId)
+                .orElseThrow()
+                .getPaymentStatus();
+    }
+
+
+    private void activate(Payments payment) {
+
+        if (payment.getOrder() != null) {
+            payment.getOrder().setStatus(OrderStatus.PROCESSING);
+        }
+
+        if (payment.getSubscription() != null) {
+            Subscriptions sub = payment.getSubscription();
+            sub.setStatus(SubscriptionStatus.ACTIVE);
+
+            switch (sub.getPlanType()){
+                case CUSTUME -> subHelper.generateSubscriptionEventsFromRules(sub);
+                default -> subHelper.generateSubscriptionEvents(sub);
+            }
+
+
         }
     }
+
+    private void validateOwnership(User owner, User user) {
+        if (!owner.getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+    }
+
+    private void handlePaymentFailure(Payments payment) {
+
+
+        if (payment.getOrder() != null) {
+            Orders order = payment.getOrder();
+            order.setStatus(OrderStatus.CANCELLED);
+        }
+
+
+        if (payment.getSubscription() != null) {
+            Subscriptions sub = payment.getSubscription();
+            sub.setStatus(SubscriptionStatus.PAYMENT_FAILED);
+            eventRepo.deleteBySubscriptionId(sub.getId());
+        }
+    }
+
+    @Transactional
+    public void updatePaymentStatus(UUID paymentId, CashfreeVerifyResponse cf) {
+
+        Payments payment = paymentRepo.findById(paymentId).orElseThrow();
+
+        if (payment.getPaymentStatus() == PaymentStatus.SUCCESS) {
+            return;
+        }
+
+
+        boolean amountMatches =
+                cf.amount().compareTo(payment.getAmount()) == 0;
+
+        Set<String> successStates = Set.of("PAID", "SUCCESS");
+
+        boolean statusOk = successStates.contains(cf.orderStatus());
+
+         if (statusOk && amountMatches){
+            payment.setPaymentStatus(PaymentStatus.SUCCESS);
+            payment.setPaymentId(cf.cfPaymentId());
+            activate(payment);
+
+        } else {
+            payment.setPaymentStatus(PaymentStatus.FAILED);
+            handlePaymentFailure(payment);
+        }
+
+        paymentRepo.save(payment);
+    }
+
+
+
 }

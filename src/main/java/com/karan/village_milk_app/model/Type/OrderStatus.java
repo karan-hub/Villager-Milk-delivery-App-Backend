@@ -8,7 +8,8 @@ public enum OrderStatus {
     PAID("Paid"),
     PROCESSING("Processing"),
     DELIVERED("Delivered"),
-    CANCELLED("Cancelled");
+    CANCELLED("Cancelled"),
+    CONFIRMED("CONFIRMED");
 
     private final String label;
 

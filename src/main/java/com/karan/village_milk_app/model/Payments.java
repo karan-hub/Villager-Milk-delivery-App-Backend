@@ -1,4 +1,5 @@
 package com.karan.village_milk_app.model;
+import com.karan.village_milk_app.model.Type.PaymentMethod;
 import com.karan.village_milk_app.model.Type.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,24 +32,32 @@ public class Payments {
     @JoinColumn(name = "order_id", columnDefinition = "BINARY(16)")
     private Orders order;
 
+    @Column(name = "my_order_id")
+    private  String myOrderId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_id", columnDefinition = "BINARY(16)")
     private Subscriptions subscription;
 
     private BigDecimal amount;
 
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
-    @Column(name = "razorpay_payment_id")
-    private String  PaymentId;
-    @Column(name = "razorpay_order_id")
-    private String  payOrderId;
+    @Column(name = "gateway_payment_id")
+    private String  paymentId;
+
+    @Column(name = "gateway_order_id")
+    private String OrderId;
+
 
     @CreatedDate
-    @Column(updatable = false)
-    private Instant createdAt;
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
 }
 

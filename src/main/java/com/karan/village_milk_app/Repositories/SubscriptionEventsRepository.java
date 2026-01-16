@@ -43,5 +43,7 @@ public interface SubscriptionEventsRepository
             LocalDate endDate,
             EventStatus status
     );
+
+    void deleteBySubscriptionId(UUID id);
 }
 

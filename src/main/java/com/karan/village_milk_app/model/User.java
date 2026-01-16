@@ -1,3 +1,4 @@
+
 package com.karan.village_milk_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

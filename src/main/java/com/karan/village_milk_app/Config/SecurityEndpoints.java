@@ -13,7 +13,8 @@ public class SecurityEndpoints {
             "/api/v1/products/**",
             "/api/v1/subscription-plans/**",
             "/error",
-            "/error/**"
+            "/error/**",
+            "/api/v1/webhooks/**"
     );
 
 
@@ -21,7 +22,8 @@ public class SecurityEndpoints {
             "/api/v1/subscriptions/**",
             "/api/v1/orders/**",
             "/api/v1/user/**",
-            "/api/v1/addresses/**"
+            "/api/v1/addresses/**",
+            "/api/v1/payments/**"
     );
 
     public static final List<String> ADMIN_ENDPOINTS = List.of(

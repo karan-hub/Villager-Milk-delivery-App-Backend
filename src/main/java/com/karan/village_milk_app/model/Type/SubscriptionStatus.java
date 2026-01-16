@@ -7,7 +7,9 @@ public enum SubscriptionStatus {
     ACTIVE("Active"),
     PAUSED("Paused"),
     CANCELLED("Cancelled"),
-    EXPIRED("Expired");
+    EXPIRED("Expired"),
+    PENDING_PAYMENT("PENDING_PAYMENT"),
+    PAYMENT_FAILED("PAYMENT_FAILED");
 
     private final String label;
 
